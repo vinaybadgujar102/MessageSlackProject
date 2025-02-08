@@ -1,27 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default function crudRespository(schema: any) {
+export default function crudRespository(model: any) {
   return {
-    model: schema,
     async create(data: any) {
-      const newDoc = await this.model.create(data)
+      const newDoc = await model.create(data)
       return newDoc
     },
     async getAll() {
-      const allDocs = await this.model.find()
+      const allDocs = await model.find()
       return allDocs
     },
     async getById(id: string) {
-      const doc = await this.model.findById(id)
+      const doc = await model.findById(id)
       return doc
     },
     async update(id: string, data: any) {
-      const updatedDoc = await this.model.findByIdAndUpdate(id, data, {
+      const updatedDoc = await model.findByIdAndUpdate(id, data, {
         new: true
       })
       return updatedDoc
     },
     async delete(id: string) {
-      const deletedDoc = await this.model.findByIdAndDelete(id)
+      const deletedDoc = await model.findByIdAndDelete(id)
       return deletedDoc
     }
   }

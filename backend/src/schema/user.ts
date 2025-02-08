@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'
 import { model, Schema } from 'mongoose'
 
 const userSchema = new Schema(
@@ -29,6 +30,9 @@ const userSchema = new Schema(
 )
 
 userSchema.pre('save', async function (next) {
+  const SALT = bcrypt.genSaltSync(10)
+  const hashedPassword = bcrypt.hashSync(this.password, SALT)
+  this.password = hashedPassword
   this.avatar = `https://robohash.org/${this.username}.png`
   next()
 })
