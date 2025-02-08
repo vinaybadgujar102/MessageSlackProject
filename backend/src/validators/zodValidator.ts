@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction,Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
+
 import { customErrorResponse } from '../utils/common/responseObject'
 
 export const validate = (schema: any) => {
@@ -8,7 +9,7 @@ export const validate = (schema: any) => {
       await schema.parseAsync(req.body)
       next()
     } catch (error: any) {
-      let explaination: any[] = []
+      const explaination: any[] = []
       let errorMessage = ''
       error.errors.forEach((key: any) => {
         explaination.push(key.path[0] + ' ' + key.message)
