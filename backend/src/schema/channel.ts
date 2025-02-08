@@ -5,6 +5,11 @@ const channelSchema = new Schema(
     name: {
       type: String,
       required: [true, 'Channel name is required']
+    },
+    workspaceId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Workspace',
+      required: true
     }
   },
   { timestamps: true }
