@@ -6,6 +6,8 @@ import { StatusCodes } from 'http-status-codes'
 import ClientError from '../utils/errors/clientError'
 import channelRepository from '../repositories/channelRepository'
 import userRepository from '../repositories/userRepository'
+import { addEmailToMailQueue } from '../producers/mailQueueProducer'
+import { workspaceJoinMail } from '../utils/common/mailObject'
 
 const isUserAdminOfWorkspace = async (workspace: any, userId: string) => {
   return workspace.members.find(
@@ -243,6 +245,10 @@ export const addMemberToWorkspaceService = async (
       memberId,
       role
     )
+    addEmailToMailQueue({
+      ...workspaceJoinMail(workspace),
+      to: isValidUser.email
+    })
     return response
   } catch (error: any) {
     console.log('Error in addMemberToWorkspaceService', error)

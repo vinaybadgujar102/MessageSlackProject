@@ -5,7 +5,19 @@ import { PORT } from './config/serverConfig'
 import apiRoutes from './routes/apiRoutes'
 import mailer from './config/mailConfig'
 
+import { createBullBoard } from '@bull-board/api'
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
+import { ExpressAdapter } from '@bull-board/express'
+import mailQueue from './queues/mailQueue'
+
 const app = express()
+
+const bullServerAdapter = new ExpressAdapter()
+
+createBullBoard({
+  queues: [new BullMQAdapter(mailQueue)],
+  serverAdapter: bullServerAdapter
+})
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
