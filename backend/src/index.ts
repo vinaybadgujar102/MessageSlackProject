@@ -1,9 +1,10 @@
 import express from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import { dbConfig } from './config/dbConfig'
 import { PORT } from './config/serverConfig'
 import apiRoutes from './routes/apiRoutes'
+import mailer from './config/mailConfig'
+
 const app = express()
 
 app.use(express.json())
@@ -18,4 +19,12 @@ app.listen(PORT, async () => {
   //   await dbConfig.connect().then(() => {
   //     console.log(`Server is running on port ${PORT}`)
   //   })
+
+  const mailResponse = await mailer.sendMail({
+    from: 'vinaybadgujar@gmail.com',
+    to: 'vinaybadgujar@gmail.com',
+    subject: 'Test Email',
+    text: 'This is a test email'
+  })
+  console.log(mailResponse)
 })

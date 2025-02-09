@@ -8,3 +8,5 @@ export const DEVELOPMENT_DB_URL = process.env.DEVELOPMENT_DB_URL
 export const PRODUCTION_DB_URL = process.env.PRODUCTION_DB_URL
 export const JWT_SECRET = process.env.JWT_SECRET
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h'
+export const MAIL_PASSWORD = process.env.MAIL_PASSWORD
+export const MAIL_ID = process.env.MAIL_ID

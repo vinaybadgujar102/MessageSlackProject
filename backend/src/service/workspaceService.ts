@@ -16,7 +16,10 @@ const isUserAdminOfWorkspace = async (workspace: any, userId: string) => {
   )
 }
 
-const isUserMemberOfWorkspace = async (workspace: any, userId: string) => {
+export const isUserMemberOfWorkspace = async (
+  workspace: any,
+  userId: string
+) => {
   return workspace.members.find(
     (member: any) => member.memberId.toString() === userId
   )
