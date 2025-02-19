@@ -15,6 +15,8 @@ import { dbConfig } from './config/dbConfig'
 import MessageSocketHandlers from './controllers/messageSocketController'
 import ChannelSocketHandlers from './controllers/channelSocketController'
 
+import cors from 'cors'
+
 const app = express()
 const server = createServer(app)
 
@@ -26,6 +28,8 @@ createBullBoard({
   queues: [new BullMQAdapter(mailQueue)],
   serverAdapter: bullServerAdapter
 })
+
+app.use(cors())
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
