@@ -41,3 +41,8 @@ export const getMessagesService = async (
   )
   return messages
 }
+
+export const createMessageService = async (message: any) => {
+  const newMessage = await messageRepository.create(message)
+  return newMessage
+}

@@ -9,8 +9,16 @@ import { createBullBoard } from '@bull-board/api'
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 import { ExpressAdapter } from '@bull-board/express'
 import mailQueue from './queues/mailQueue'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import { dbConfig } from './config/dbConfig'
+import MessageSocketHandlers from './controllers/messageSocketController'
+import ChannelSocketHandlers from './controllers/channelSocketController'
 
 const app = express()
+const server = createServer(app)
+
+const io = new Server(server)
 
 const bullServerAdapter = new ExpressAdapter()
 
@@ -27,10 +35,15 @@ app.get('/ping', (req, res) => {
   res.status(StatusCodes.OK).json({ message: 'pong' })
 })
 
-app.listen(PORT, async () => {
-  //   await dbConfig.connect().then(() => {
-  //     console.log(`Server is running on port ${PORT}`)
-  //   })
+io.on('connection', (socket) => {
+  MessageSocketHandlers(io, socket)
+  ChannelSocketHandlers(io, socket)
+})
+
+server.listen(PORT, async () => {
+  await dbConfig.connect().then(() => {
+    console.log(`Server is running on port ${PORT}`)
+  })
 
   const mailResponse = await mailer.sendMail({
     from: 'vinaybadgujar@gmail.com',
