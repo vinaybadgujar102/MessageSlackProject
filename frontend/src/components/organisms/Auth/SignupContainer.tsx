@@ -48,7 +48,7 @@ export const SignupContainer = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      navigate("/auth/signin");
     }
   }, [isSuccess, navigate]);
 

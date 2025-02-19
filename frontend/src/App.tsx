@@ -9,6 +9,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Auth } from "@/pages/Auth/Auth";
 import { Notfound } from "@/pages/Notfound/Notfound";
 
+import { SigninContainer } from "./components/organisms/Auth/SigninContainer";
+
 function App() {
   const queryClient = new QueryClient();
 
@@ -27,7 +29,15 @@ function App() {
           path="/auth/signin"
           element={
             <Auth>
-              <SigninCard />
+              <SigninContainer />
+            </Auth>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <Auth>
+              <Home />
             </Auth>
           }
         />

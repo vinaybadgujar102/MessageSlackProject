@@ -32,7 +32,6 @@ export const signInRequest = async ({
 }: {
   email: string;
   password: string;
-  username: string;
 }) => {
   try {
     const response = await axios.post("/users/signin", {
