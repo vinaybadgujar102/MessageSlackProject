@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +21,8 @@ export const CreateWorkspaceModal = () => {
   const { isPending, isSuccess, createWorkspaceMutation } =
     useCreateWorkspace();
 
+  console.log(isSuccess);
+
   const [workspaceName, setWorkspaceName] = useState("");
 
   function handleClose() {
@@ -33,6 +36,7 @@ export const CreateWorkspaceModal = () => {
         name: workspaceName,
         description: "",
       });
+      // @ts-expect-error
       navigate(`/workspace/${data._id}`);
     } catch (error) {
       console.error("Not able to create a new workspace", error);

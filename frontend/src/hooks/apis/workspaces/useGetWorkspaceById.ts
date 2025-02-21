@@ -4,7 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchWorkspaceDetailsRequest } from "@/apis/workspaces";
 import { useAuth } from "@/hooks/context/useAuth";
 
-export const useGetWorkspaceById = (workspaceId: string) => {
+export const useGetWorkspaceById = (workspaceId: string | undefined) => {
+  if (!workspaceId) {
+    throw new Error("Workspace ID is required");
+  }
+
   const { auth } = useAuth();
   const {
     isFetching,
