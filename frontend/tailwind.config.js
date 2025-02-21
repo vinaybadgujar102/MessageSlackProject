@@ -14,6 +14,7 @@ export default {
         foreground: "hsl(var(--foreground))",
         slack: {
           DEFAULT: "#5c3858",
+          medium: "#5e2c5f",
           dark: "#481349",
         },
         card: {
