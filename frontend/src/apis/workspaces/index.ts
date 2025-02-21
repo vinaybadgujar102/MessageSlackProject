@@ -24,7 +24,7 @@ export const createWorkspaceRequest = async ({
       }
     );
 
-    return response?.data;
+    return response?.data?.data;
   } catch (error: any) {
     console.log("Error in create workspace request", error);
     throw error.response.data;
@@ -39,9 +39,30 @@ export const fetchWorkspacesRequest = async ({ token }: { token: string }) => {
       },
     });
 
-    return response?.data;
+    return response?.data?.data;
   } catch (error: any) {
     console.log("Error in fetch workspaces request", error);
+    throw error.response.data;
+  }
+};
+
+export const fetchWorkspaceDetailsRequest = async ({
+  workspaceId,
+  token,
+}: {
+  workspaceId: string;
+  token: string;
+}) => {
+  try {
+    const response = await axiosConfig.get(`/workspaces/${workspaceId}`, {
+      headers: {
+        "x-access-token": token,
+      },
+    });
+
+    return response?.data?.data;
+  } catch (error: any) {
+    console.log("Error in fetch workspace details request", error);
     throw error.response.data;
   }
 };
