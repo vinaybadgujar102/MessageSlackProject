@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/context/useAuth";
+import { useWorkspacePreferencesModal } from "@/hooks/context/useWorkspacePreferencesModal";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
@@ -20,6 +21,9 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
     (member: any) =>
       member.memberId === auth?.user?._id && member.role === "admin"
   );
+
+  const { setOpenPreferences, setInitialValue } =
+    useWorkspacePreferencesModal();
 
   return (
     <div className="flex items-center justify-between px-4 h-[40px] gap-0.5">
@@ -47,7 +51,13 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
 
           {isLoggedInUserAdminOfWorkspace && (
             <>
-              <DropdownMenuItem className="cursor-pointer py-2">
+              <DropdownMenuItem
+                onClick={() => {
+                  setInitialValue(workspace?.name);
+                  setOpenPreferences(true);
+                }}
+                className="cursor-pointer py-2"
+              >
                 Preferences
               </DropdownMenuItem>
               <DropdownMenuSeparator />
