@@ -6,11 +6,15 @@ const WorkspacePreferencesModalContext = createContext<{
   setOpenPreferences: (open: boolean) => void;
   initialValue: any;
   setInitialValue: (value: any) => void;
+  workspace: any;
+  setWorkspace: (workspace: any) => void;
 }>({
   openPreferences: false,
   setOpenPreferences: () => {},
   initialValue: null,
   setInitialValue: () => {},
+  workspace: null,
+  setWorkspace: () => {},
 });
 
 export const WorkspacePreferencesModalProvider = ({
@@ -20,6 +24,7 @@ export const WorkspacePreferencesModalProvider = ({
 }) => {
   const [openPreferences, setOpenPreferences] = useState(false);
   const [initialValue, setInitialValue] = useState<any>(null);
+  const [workspace, setWorkspace] = useState(null);
 
   return (
     <WorkspacePreferencesModalContext.Provider
@@ -28,6 +33,8 @@ export const WorkspacePreferencesModalProvider = ({
         setOpenPreferences,
         initialValue,
         setInitialValue,
+        workspace,
+        setWorkspace,
       }}
     >
       {children}

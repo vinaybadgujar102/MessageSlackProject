@@ -1,4 +1,5 @@
 import { ChevronDownIcon, ListFilterIcon, SquarePen } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,8 @@ import { useWorkspacePreferencesModal } from "@/hooks/context/useWorkspacePrefer
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
+  const { setWorkspace } = useWorkspacePreferencesModal();
+
   const workspaceMembers = workspace?.members;
 
   const { auth } = useAuth();
@@ -24,6 +27,10 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
 
   const { setOpenPreferences, setInitialValue } =
     useWorkspacePreferencesModal();
+
+  useEffect(() => {
+    setWorkspace(workspace);
+  }, []);
 
   return (
     <div className="flex items-center justify-between px-4 h-[40px] gap-0.5">
