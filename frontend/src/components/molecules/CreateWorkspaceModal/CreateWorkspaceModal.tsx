@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +15,7 @@ import { useCreateWorkspace } from "@/hooks/apis/workspaces/useCreateWorkspace";
 import { useCreateWorkspaceModal } from "@/hooks/context/useCreateWorkspaceModal";
 
 export const CreateWorkspaceModal = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openCreateWorkspaceModal, setOpenCreateWorkspaceModal } =
     useCreateWorkspaceModal();
@@ -36,6 +38,7 @@ export const CreateWorkspaceModal = () => {
         name: workspaceName,
         description: "",
       });
+      queryClient.invalidateQueries({ queryKey: ["fetchWorkspaces"] });
       // @ts-expect-error
       navigate(`/workspace/${data._id}`);
     } catch (error) {
