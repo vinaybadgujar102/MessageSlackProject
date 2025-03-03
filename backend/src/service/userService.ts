@@ -6,9 +6,49 @@ import userRepository from '../repositories/userRepository'
 import ClientError from '../utils/errors/clientError'
 import ValidationError from '../utils/errors/validationError'
 import { createJWT } from '../utils/common/authUtils'
+import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig'
+
+export const verifyTokenService = async (token: string) => {
+  try {
+    const user = await userRepository.getByToken(token)
+    if (!user) {
+      throw new ClientError({
+        explaination: 'Invalid data sent by the client',
+        message: 'no registered user found with this email',
+        statusCode: StatusCodes.NOT_FOUND
+      })
+    }
+
+    // check if the token is expired
+    if (
+      user.verificationTokenExpiry &&
+      user.verificationTokenExpiry < new Date()
+    ) {
+      throw new ClientError({
+        explaination: 'Invalid data sent by the client',
+        message: 'token expired',
+        statusCode: StatusCodes.BAD_REQUEST
+      })
+    }
+
+    user.isVerified = true
+    user.verificationToken = undefined
+    user.verificationTokenExpiry = undefined
+    await user.save()
+
+    return user
+  } catch (error) {
+    console.log('User service error: ', error)
+    throw new Error('Internal server error')
+  }
+}
+
 export const signUpService = async (data: any) => {
   try {
-    const newUser = await userRepository.create(data)
+    const newUser = await userRepository.signUpUser(data)
+    if (ENABLE_EMAIL_VERIFICATION === 'true') {
+      // TODO - later add this from repo
+    }
     return newUser
   } catch (error: any) {
     console.log('User service error: ', error)

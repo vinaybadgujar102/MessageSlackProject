@@ -78,6 +78,44 @@ export const createWorkspaceService = async (workspaceData: any) => {
   }
 }
 
+export const joinWorkspaceService = async (
+  workspaceId: string,
+  userId: string,
+  joinCode: string
+) => {
+  try {
+    const workspace = await workspaceRepository.getById(workspaceId)
+    if (!workspace) {
+      throw new ClientError({
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      })
+    }
+    if (workspace.joinCode !== joinCode) {
+      throw new ClientError({
+        message: 'Invalid join code',
+        statusCode: StatusCodes.BAD_REQUEST
+      })
+    }
+    const isMember = await isUserMemberOfWorkspace(workspace, userId)
+    if (isMember) {
+      throw new ClientError({
+        message: 'You are already a member of this workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      })
+    }
+    const response = await workspaceRepository.addMemberToWorkspace(
+      workspaceId,
+      userId,
+      'member'
+    )
+    return response
+  } catch (error: any) {
+    console.log('Error in joinWorkspaceService', error)
+    throw new Error('Internal server error')
+  }
+}
+
 export const resetWorkspaceJoinCodeService = async (
   workspaceId: string,
   userId: string

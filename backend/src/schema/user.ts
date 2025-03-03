@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { model, Schema } from 'mongoose'
-
+import { v4 as uuidv4 } from 'uuid'
 const userSchema = new Schema(
   {
     email: {
@@ -24,16 +24,30 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String
+    },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    verificationToken: {
+      type: String
+    },
+    verificationTokenExpiry: {
+      type: Date
     }
   },
   { timestamps: true }
 )
 
 userSchema.pre('save', async function (next) {
-  const SALT = bcrypt.genSaltSync(10)
-  const hashedPassword = bcrypt.hashSync(this.password, SALT)
-  this.password = hashedPassword
-  this.avatar = `https://robohash.org/${this.username}.png`
+  if (this.isNew) {
+    const SALT = bcrypt.genSaltSync(10)
+    const hashedPassword = bcrypt.hashSync(this.password, SALT)
+    this.password = hashedPassword
+    this.avatar = `https://robohash.org/${this.username}.png`
+    this.verificationToken = uuidv4().substring(0, 10).toUpperCase()
+    this.verificationTokenExpiry = new Date(Date.now() + 3600000) // 1 hour
+  }
   next()
 })
 

@@ -9,6 +9,7 @@ import {
   getWorkspaceByJoinCodeController,
   getWorkspaceController,
   getWorkspacesUserIsMemberOfController,
+  joinWorkspaceController,
   resetWorkspaceJoinCodeController,
   updateWorkspaceController
 } from '../../controllers/workspaceController'
@@ -36,6 +37,8 @@ router.get('/:workspaceId', isAuthenticated, getWorkspaceController)
 
 router.get('/join/:joinCode', isAuthenticated, getWorkspaceByJoinCodeController)
 
+router.put('/:workspaceId/join', isAuthenticated, joinWorkspaceController)
+
 router.put('/:workspaceId', isAuthenticated, updateWorkspaceController)
 
 router.put(
@@ -57,4 +60,5 @@ router.put(
   isAuthenticated,
   resetWorkspaceJoinCodeController
 )
+
 export default router

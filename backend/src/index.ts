@@ -16,6 +16,7 @@ import MessageSocketHandlers from './controllers/messageSocketController'
 import ChannelSocketHandlers from './controllers/channelSocketController'
 
 import cors from 'cors'
+import { verifyEmailController } from './controllers/workspaceController'
 
 const app = express()
 const server = createServer(app)
@@ -35,6 +36,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/api', apiRoutes)
+
+app.get('/verify/:token', verifyEmailController)
+
 app.get('/ping', (req, res) => {
   res.status(StatusCodes.OK).json({ message: 'pong' })
 })

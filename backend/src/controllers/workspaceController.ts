@@ -14,9 +14,11 @@ import {
   getWorkspaceByJoinCodeService,
   getWorkspaceService,
   getWorkspacesUserIsMemberOfService,
+  joinWorkspaceService,
   resetWorkspaceJoinCodeService,
   updateWorkspaceService
 } from '../service/workspaceService'
+import { verifyTokenService } from '../service/userService'
 
 export const createWorkspaceController = async (
   req: Request,
@@ -211,6 +213,44 @@ export const resetWorkspaceJoinCodeController = async (
       .json(successResponse(response, 'Workspace join code reset successfully'))
   } catch (error: any) {
     console.log('Error in resetWorkspaceJoinCodeController', error)
+    if (error.statusCode) {
+      res.status(error.statusCode).json(customErrorResponse(error))
+    }
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalServerError(error))
+  }
+}
+
+export const joinWorkspaceController = async (req: Request, res: Response) => {
+  try {
+    const response = await joinWorkspaceService(
+      req.params.workspaceId,
+      req.user,
+      req.body.joinCode
+    )
+    res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Workspace joined successfully'))
+  } catch (error: any) {
+    console.log('Error in joinWorkspaceController', error)
+    if (error.statusCode) {
+      res.status(error.statusCode).json(customErrorResponse(error))
+    }
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalServerError(error))
+  }
+}
+
+export const verifyEmailController = async (req: Request, res: Response) => {
+  try {
+    const response = await verifyTokenService(req.params.token)
+    res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Email verified successfully'))
+  } catch (error: any) {
+    console.log('Error in verifyEmailController', error)
     if (error.statusCode) {
       res.status(error.statusCode).json(customErrorResponse(error))
     }

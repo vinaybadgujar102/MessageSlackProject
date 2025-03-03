@@ -1,7 +1,7 @@
 import User from '../schema/user'
 import crudRespository from './crudRepository'
 
-//type UserType = typeof User
+type UserType = typeof User
 
 // export const getUserByEmail = async (email: string) => {
 //   const user = await User.findOne({ email })
@@ -40,12 +40,21 @@ import crudRespository from './crudRepository'
 
 const userRepository = {
   ...crudRespository(User),
+  signUpUser: async function (data: UserType) {
+    const user = new User(data)
+    await user.save()
+    return user
+  },
   getUserByEmail: async (email: string) => {
     const user = await User.findOne({ email })
     return user
   },
   getUserByUsername: async (username: string) => {
     const user = await User.findOne({ username }).select('-password') // -password to exclude the password from the response
+    return user
+  },
+  getByToken: async (token: string) => {
+    const user = await User.findOne({ verificationToken: token })
     return user
   }
 }
