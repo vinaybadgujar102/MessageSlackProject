@@ -170,3 +170,51 @@ export const resetWorkspaceJoinCodeRequest = async ({
     throw error.response.data;
   }
 };
+
+export const addMemberToWorkspaceRequest = async ({
+  workspaceId,
+  token,
+}: {
+  workspaceId: string;
+  token: string;
+}) => {
+  try {
+    const response = await axiosConfig.put(
+      `/workspaces/${workspaceId}/members`,
+      {},
+      {
+        headers: {
+          "x-access-token": token,
+        },
+      }
+    );
+
+    return response?.data?.data;
+  } catch (error: any) {
+    console.log("error in add member to workspace request", error);
+    throw error.response.data;
+  }
+};
+
+export const joinWorkspaceRequest = async ({
+  workspaceId,
+  joinCode,
+  token,
+}: {
+  workspaceId: string;
+  joinCode: string;
+  token: string;
+}) => {
+  try {
+    const response = await axiosConfig.put(
+      `/workspaces/${workspaceId}/join`,
+      { joinCode },
+      { headers: { "x-access-token": token } }
+    );
+
+    return response?.data?.data;
+  } catch (error: any) {
+    console.log("error in join workspace request", error);
+    throw error.response.data;
+  }
+};

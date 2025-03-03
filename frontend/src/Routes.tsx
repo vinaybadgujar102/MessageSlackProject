@@ -6,8 +6,8 @@ import { SignupContainer } from "./components/organisms/Auth/SignupContainer";
 import { Auth } from "./pages/Auth/Auth";
 import { Home } from "./pages/Home/Home";
 import { Notfound } from "./pages/Notfound/Notfound";
-import { WorkspaceLayout } from "./pages/Workspace/Layout";
 import { JoinPage } from "./pages/Workspace/JoinPage";
+import { WorkspaceLayout } from "./pages/Workspace/Layout";
 
 export const AppRoutes = () => {
   return (
