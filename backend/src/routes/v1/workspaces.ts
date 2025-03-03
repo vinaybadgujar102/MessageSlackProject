@@ -9,9 +9,14 @@ import {
   getWorkspaceByJoinCodeController,
   getWorkspaceController,
   getWorkspacesUserIsMemberOfController,
+  resetWorkspaceJoinCodeController,
   updateWorkspaceController
 } from '../../controllers/workspaceController'
-import { addChannelToWorkspaceSchema, addMemberToWorkspaceSchema, createWorkspaceSchema } from '../../validators/workspaceSchema'
+import {
+  addChannelToWorkspaceSchema,
+  addMemberToWorkspaceSchema,
+  createWorkspaceSchema
+} from '../../validators/workspaceSchema'
 import { isAuthenticated } from '../../middlewares/authMiddleware'
 
 const router = Router()
@@ -43,7 +48,13 @@ router.put(
 router.put(
   '/:workspaceId/channels',
   isAuthenticated,
-  validate(addChannelToWorkspaceSchema),  
+  validate(addChannelToWorkspaceSchema),
   addChannelToWorkspaceController
+)
+
+router.put(
+  '/:workspaceId/joinCode/reset',
+  isAuthenticated,
+  resetWorkspaceJoinCodeController
 )
 export default router

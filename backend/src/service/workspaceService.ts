@@ -23,7 +23,7 @@ export const isUserMemberOfWorkspace = async (
   userId: string
 ) => {
   return workspace.members.find(
-    (member: any) => member.memberId.toString() === userId
+    (member: any) => member.memberId._id.toString() === userId
   )
 }
 
@@ -78,6 +78,25 @@ export const createWorkspaceService = async (workspaceData: any) => {
   }
 }
 
+export const resetWorkspaceJoinCodeService = async (
+  workspaceId: string,
+  userId: string
+) => {
+  try {
+    const newJoinCode = uuidv4().substring(0, 6).toUpperCase()
+    const updatedWorkspace = await updateWorkspaceService(
+      workspaceId,
+      {
+        joinCode: newJoinCode
+      },
+      userId
+    )
+    return updatedWorkspace
+  } catch (error: any) {
+    console.log('Error in resetWorkspaceJoinCodeService', error)
+    throw new Error('Internal server error')
+  }
+}
 export const getWorkspacesUserIsMemberOfService = async (userId: string) => {
   try {
     const workspaces =
@@ -126,7 +145,8 @@ export const getWorkspaceService = async (
   userId: string
 ) => {
   try {
-    const workspace = await workspaceRepository.getById(workspaceId)
+    const workspace =
+      await workspaceRepository.getWorkspaceDetailsById(workspaceId)
     if (!workspace) {
       throw new ClientError({
         message: 'Workspace not found',
