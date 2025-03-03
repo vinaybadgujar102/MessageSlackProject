@@ -43,6 +43,10 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/workspace/:workspaceId/channels/:channelId"
+        element={<ProtectedRoute>Channel</ProtectedRoute>}
+      />
       <Route path="*" element={<Notfound />} />
     </Routes>
   );

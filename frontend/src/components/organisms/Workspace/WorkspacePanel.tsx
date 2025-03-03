@@ -1,11 +1,22 @@
-import { AlertTriangle, LucideLoader2 } from "lucide-react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AlertTriangle,
+  LucideLoader2,
+  MessageSquareTextIcon,
+  SendHorizonalIcon,
+} from "lucide-react";
 import { useParams } from "react-router-dom";
 
+import { SideBarItem } from "@/components/atoms/SideBarItem/SideBarItem";
 import { WorkspacePanelHeader } from "@/components/molecules/Workspace/WorkspacePanelHeader";
+import { WorkspacePanelSection } from "@/components/molecules/Workspace/WorkspacePanelSection";
 import { useGetWorkspaceById } from "@/hooks/apis/workspaces/useGetWorkspaceById";
+import { useCreateChannelModal } from "@/hooks/context/useCreateChannelModal";
 
 export const WorkspacePanel = () => {
   const { workspaceId } = useParams();
+
+  const { setOpenCreateChannelModal } = useCreateChannelModal();
 
   const { workspace, isFetching, isSuccess } = useGetWorkspaceById(workspaceId);
 
@@ -28,6 +39,37 @@ export const WorkspacePanel = () => {
   return (
     <div className="flex flex-col h-full bg-slack-medium">
       <WorkspacePanelHeader workspace={workspace} />
+      <div className="flex flex-col pt-2 px-2">
+        <SideBarItem
+          label="Threads"
+          icon={MessageSquareTextIcon}
+          variant="active"
+          id="threads"
+        />
+        <SideBarItem
+          label="Drafts and Sends"
+          icon={SendHorizonalIcon}
+          variant="default"
+          id="drafts"
+        />
+      </div>
+
+      <WorkspacePanelSection
+        label="Channels"
+        onIconClick={() => setOpenCreateChannelModal(true)}
+      >
+        {workspace?.channels?.map((channel: any) => {
+          return (
+            <SideBarItem
+              key={channel.id}
+              label={channel.name}
+              icon={MessageSquareTextIcon}
+              variant={channel.id === workspaceId ? "active" : "default"}
+              id={channel._id}
+            />
+          );
+        })}
+      </WorkspacePanelSection>
     </div>
   );
 };
