@@ -21,7 +21,11 @@ import { verifyEmailController } from './controllers/workspaceController'
 const app = express()
 const server = createServer(app)
 
-const io = new Server(server)
+const io = new Server(server, {
+  cors: {
+    origin: '*'
+  }
+})
 
 const bullServerAdapter = new ExpressAdapter()
 

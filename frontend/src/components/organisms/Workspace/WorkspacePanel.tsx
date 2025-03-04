@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { SideBarItem } from "@/components/atoms/SideBarItem/SideBarItem";
 import { WorkspacePanelHeader } from "@/components/molecules/Workspace/WorkspacePanelHeader";
 import { WorkspacePanelSection } from "@/components/molecules/Workspace/WorkspacePanelSection";
+import { UserItem } from "@/components/UserItem/UserItem";
 import { useGetWorkspaceById } from "@/hooks/apis/workspaces/useGetWorkspaceById";
 import { useCreateChannelModal } from "@/hooks/context/useCreateChannelModal";
 
@@ -66,6 +67,20 @@ export const WorkspacePanel = () => {
               icon={MessageSquareTextIcon}
               variant={channel.id === workspaceId ? "active" : "default"}
               id={channel._id}
+            />
+          );
+        })}
+      </WorkspacePanelSection>
+
+      <WorkspacePanelSection label="Members">
+        {workspace?.members?.map((member: any) => {
+          return (
+            <UserItem
+              key={member.id}
+              id={member.id}
+              label={member.name}
+              image={member.avatar}
+              variant="default"
             />
           );
         })}

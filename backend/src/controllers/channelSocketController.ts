@@ -7,7 +7,7 @@ export default function messageHandlers(io: Server, socket: Socket) {
     async function joinChannelHandler(data: any, cb: any) {
       const roomId = data.channelId
       socket.join(roomId)
-      cb({
+      cb?.({
         success: true,
         message: 'Joined channel successfully',
         data: roomId
