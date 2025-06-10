@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 
-import { ProtectedRoute } from "./components/molecules/ProtectedRoute/ProtectedRoute";
-import { SigninContainer } from "./components/organisms/Auth/SigninContainer";
-import { SignupContainer } from "./components/organisms/Auth/SignupContainer";
-import { Auth } from "./pages/Auth/Auth";
-import { Home } from "./pages/Home/Home";
-import { Notfound } from "./pages/Notfound/Notfound";
+import { ProtectedRoute } from "@/components/molecules/ProtectedRoute/ProtectedRoute";
+import { SigninContainer } from "@/components/organisms/Auth/SigninContainer";
+import { SignupContainer } from "@/components/organisms/Auth/SignupContainer";
+import { Auth } from "@/pages/Auth/Auth";
+import { Home } from "@/pages/Home/Home";
+import { Notfound } from "@/pages/Notfound/Notfound";
+
 import { Channel } from "./pages/Workspace/Channel/Channel";
 import { JoinPage } from "./pages/Workspace/JoinPage";
 import { WorkspaceLayout } from "./pages/Workspace/Layout";
@@ -38,7 +39,7 @@ export const AppRoutes = () => {
         }
       />
       <Route
-        path="/workspace/:workspaceId"
+        path="/workspaces/:workspaceId"
         element={
           <ProtectedRoute>
             <WorkspaceLayout>Workspace</WorkspaceLayout>
@@ -46,7 +47,7 @@ export const AppRoutes = () => {
         }
       />
       <Route
-        path="/workspace/:workspaceId/channels/:channelId"
+        path="/workspaces/:workspaceId/channels/:channelId"
         element={
           <ProtectedRoute>
             <WorkspaceLayout>
@@ -55,8 +56,17 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/makepayment"
+        element={
+          <ProtectedRoute>
+            <div>Payments</div>
+          </ProtectedRoute>
+        }
+      />
       <Route path="/workspaces/join/:workspaceId" element={<JoinPage />} />
-      <Route path="*" element={<Notfound />} />
+      <Route path="/*" element={<Notfound />} />
     </Routes>
   );
 };

@@ -2,11 +2,11 @@
 import bcrypt from 'bcrypt'
 import { StatusCodes } from 'http-status-codes'
 
+import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig'
 import userRepository from '../repositories/userRepository'
+import { createJWT } from '../utils/common/authUtils'
 import ClientError from '../utils/errors/clientError'
 import ValidationError from '../utils/errors/validationError'
-import { createJWT } from '../utils/common/authUtils'
-import { ENABLE_EMAIL_VERIFICATION } from '../config/serverConfig'
 
 export const verifyTokenService = async (token: string) => {
   try {

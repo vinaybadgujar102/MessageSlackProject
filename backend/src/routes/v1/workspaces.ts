@@ -1,6 +1,5 @@
 import { Router } from 'express'
 
-import { validate } from '../../validators/zodValidator'
 import {
   addChannelToWorkspaceController,
   addMemberToWorkspaceController,
@@ -13,12 +12,13 @@ import {
   resetWorkspaceJoinCodeController,
   updateWorkspaceController
 } from '../../controllers/workspaceController'
+import { isAuthenticated } from '../../middlewares/authMiddleware'
 import {
   addChannelToWorkspaceSchema,
   addMemberToWorkspaceSchema,
   createWorkspaceSchema
 } from '../../validators/workspaceSchema'
-import { isAuthenticated } from '../../middlewares/authMiddleware'
+import { validate } from '../../validators/zodValidator'
 
 const router = Router()
 

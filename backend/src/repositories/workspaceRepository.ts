@@ -118,6 +118,7 @@ const workspaceRepository = {
   removeChannelFromWorkspace: async function () {},
 
   fetchAllWorkspacesByUserId: async function (memberId: string) {
+    console.log('memberId', memberId)
     const workspaces = await Workspace.find({
       'members.memberId': memberId
     }).populate('members.memberId', 'username email avatar')

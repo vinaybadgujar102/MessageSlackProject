@@ -1,10 +1,12 @@
-import { Request, Response, NextFunction } from 'express'
-import { verifyJWT } from '../utils/common/authUtils'
+import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
+
+import { verifyJWT } from '../utils/common/authUtils'
 import {
   customErrorResponse,
   internalServerError
 } from '../utils/common/responseObject'
+import userRepository from '../repositories/userRepository'
 
 // Add this interface to extend Request
 declare global {
@@ -40,12 +42,22 @@ export const isAuthenticated = async (
         })
       )
     }
+    const decodedToken = response as { id: string }
+    const user = await userRepository.getById(decodedToken.id)
+    if (!user) {
+      res.status(StatusCodes.NOT_FOUND).json(
+        customErrorResponse({
+          message: 'User not found',
+          explaination: 'User associated with token no longer exists'
+        })
+      )
+    }
 
-    req.user = response
+    req.user = user.id
     next()
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log('Auth middleware error: ', error)
-    if (error.name === 'JsonWebTokenError') {
+    if (error instanceof Error && error.name === 'JsonWebTokenError') {
       res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
           message: 'Invalid token',
