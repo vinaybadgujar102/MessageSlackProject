@@ -39,8 +39,8 @@ export const SigninCard = ({
   return (
     <Card className="w-full h-full">
       <CardHeader>
-        <CardTitle>Signup</CardTitle>
-        <CardDescription>Create an account to get started</CardDescription>
+        <CardTitle>Signin</CardTitle>
+        <CardDescription>Signin to your account to get started</CardDescription>
 
         {validationError && (
           <div className="bg-destructive/15 p-4 rounded-md items-center gap-x-2 flex text-destructive text-sm mt-2">
@@ -95,7 +95,7 @@ export const SigninCard = ({
           Don't have an account ?{" "}
           <span
             onClick={() => navigate("/auth/signup")}
-            className="text-sky-100 hover:underline cursor-pointer"
+            className="text-sky-500 hover:underline cursor-pointer"
           >
             Sign Up
           </span>

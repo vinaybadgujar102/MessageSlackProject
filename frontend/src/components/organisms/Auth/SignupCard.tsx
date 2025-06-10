@@ -115,7 +115,7 @@ export const SignupCard = ({
           Already have an account ?{" "}
           <span
             onClick={() => navigate("/auth/signin")}
-            className="text-sky-100 hover:underline cursor-pointer"
+            className="text-sky-500 hover:underline cursor-pointer"
           >
             Sign In
           </span>
