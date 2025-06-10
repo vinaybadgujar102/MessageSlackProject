@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@types/quill": "^2.0.14",
-    "lucide-react": "^0.475.0",
-    "quill": "^2.0.3"
-  }
-}

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { useResetJoinCode } from "@/hooks/apis/workspaces/userResetJoinCode";
 import { useToast } from "@/hooks/use-toast";
+
 export const WorkspaceInviteModal = ({
   workspaceName,
   joinCode,

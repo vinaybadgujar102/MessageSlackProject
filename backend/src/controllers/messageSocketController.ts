@@ -1,6 +1,7 @@
 import { Server, Socket } from 'socket.io'
-import { EventEnum } from '../utils/common/eventEnum'
+
 import { createMessageService } from '../service/messageService'
+import { EventEnum } from '../utils/common/eventEnum'
 
 export default function messageHandlers(io: Server, socket: Socket) {
   socket.on(

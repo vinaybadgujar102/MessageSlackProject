@@ -81,7 +81,7 @@ export const SignupCard = ({
             onChange={(e) =>
               setSignupForm({ ...signupForm, username: e.target.value })
             }
-            value={signupForm.email}
+            value={signupForm.username}
             disabled={isPending}
           />
           <Input
@@ -91,7 +91,7 @@ export const SignupCard = ({
             onChange={(e) =>
               setSignupForm({ ...signupForm, password: e.target.value })
             }
-            value={signupForm.email}
+            value={signupForm.password}
             disabled={isPending}
           />
           <Input
@@ -101,7 +101,7 @@ export const SignupCard = ({
             onChange={(e) =>
               setSignupForm({ ...signupForm, confirmPassword: e.target.value })
             }
-            value={signupForm.email}
+            value={signupForm.confirmPassword}
             disabled={isPending}
           />
           <Button type="submit" size="lg" disabled={isPending}>

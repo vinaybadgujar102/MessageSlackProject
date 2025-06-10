@@ -13,6 +13,7 @@ import { useAddChannelToWorkspace } from "@/hooks/apis/workspaces/useAddChannelT
 import { useCreateChannelModal } from "@/hooks/context/useCreateChannelModal";
 import { useCurrentWorkspace } from "@/hooks/context/useCurrentWorkspace";
 import { useToast } from "@/hooks/use-toast";
+
 export const CreateChannelModal = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();

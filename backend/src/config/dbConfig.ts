@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
 
-import { DEVELOPMENT_DB_URL } from './serverConfig'
-import { NODE_ENV } from './serverConfig'
-import { PRODUCTION_DB_URL } from './serverConfig'
+import { DEVELOPMENT_DB_URL, NODE_ENV, PRODUCTION_DB_URL } from './serverConfig'
 
 export class DBConfig {
   private static instance: DBConfig
@@ -25,7 +23,12 @@ export class DBConfig {
     try {
       const dbUrl =
         NODE_ENV === 'development' ? DEVELOPMENT_DB_URL : PRODUCTION_DB_URL
-      await mongoose.connect(dbUrl!)
+
+      if (!dbUrl) {
+        throw new Error('Database URL is not configured')
+      }
+
+      await mongoose.connect(dbUrl)
       this.isConnected = true
       console.log('Connected to DB')
     } catch (error) {

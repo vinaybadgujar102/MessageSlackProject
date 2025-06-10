@@ -6,7 +6,7 @@ export const Modals = () => {
   return (
     <>
       <CreateWorkspaceModal />
-      <WorkspacePreferencesModal />
+      {/* <WorkspacePreferencesModal /> */}
       <CreateChannelModal />
     </>
   );

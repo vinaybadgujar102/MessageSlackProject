@@ -77,8 +77,10 @@ export const WorkspacePreferencesModal = () => {
     }
   };
 
+  console.log("workspace", workspace);
+
   useEffect(() => {
-    setWorkspaceId(workspace._id);
+    setWorkspaceId(workspace._id ?? "");
     setRenameValue(workspace.name);
   }, [workspace]);
 

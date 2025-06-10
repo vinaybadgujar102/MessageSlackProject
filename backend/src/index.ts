@@ -1,22 +1,21 @@
-import express from 'express'
-import { StatusCodes } from 'http-status-codes'
-
-import { PORT } from './config/serverConfig'
-import apiRoutes from './routes/apiRoutes'
-import mailer from './config/mailConfig'
-
+// import mailer from './config/mailConfig'
 import { createBullBoard } from '@bull-board/api'
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
 import { ExpressAdapter } from '@bull-board/express'
-import mailQueue from './queues/mailQueue'
-import { createServer } from 'http'
-import { Server } from 'socket.io'
-import { dbConfig } from './config/dbConfig'
-import MessageSocketHandlers from './controllers/messageSocketController'
-import ChannelSocketHandlers from './controllers/channelSocketController'
-
 import cors from 'cors'
+import express from 'express'
+import { createServer } from 'http'
+import { StatusCodes } from 'http-status-codes'
+import mongoose from 'mongoose'
+import { Server } from 'socket.io'
+
+import { dbConfig } from './config/dbConfig'
+import { PORT } from './config/serverConfig'
+import ChannelSocketHandlers from './controllers/channelSocketController'
+import MessageSocketHandlers from './controllers/messageSocketController'
 import { verifyEmailController } from './controllers/workspaceController'
+import mailQueue from './queues/mailQueue'
+import apiRoutes from './routes/apiRoutes'
 
 const app = express()
 const server = createServer(app)
@@ -53,15 +52,19 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, async () => {
-  await dbConfig.connect().then(() => {
-    console.log(`Server is running on port ${PORT}`)
-  })
+  // await dbConfig.connect().then(() => {
+  //   console.log(`Server is running on port ${PORT}`)
+  // })
 
-  const mailResponse = await mailer.sendMail({
-    from: 'vinaybadgujar@gmail.com',
-    to: 'vinaybadgujar@gmail.com',
-    subject: 'Test Email',
-    text: 'This is a test email'
-  })
-  console.log(mailResponse)
+  await mongoose.connect(
+    'mongodb+srv://vinaybadgujar8:Badgujar%40102@cluster0.pixrm7d.mongodb.net/chat-app'
+  )
+
+  // const mailResponse = await mailer.sendMail({
+  //   from: 'vinaybadgujar@gmail.com',
+  //   to: 'vinaybadgujar@gmail.com',
+  //   subject: 'Test Email',
+  //   text: 'This is a test email'
+  // })
+  // console.log(mailResponse)
 })

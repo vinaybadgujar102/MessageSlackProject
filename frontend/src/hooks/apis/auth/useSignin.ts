@@ -16,8 +16,6 @@ export const useSignin = () => {
   } = useMutation({
     mutationFn: signInRequest,
     onSuccess: (response: any) => {
-      console.log(response);
-
       const userObject = JSON.stringify(response.data);
 
       localStorage.setItem("user", userObject);

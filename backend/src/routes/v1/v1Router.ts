@@ -1,10 +1,10 @@
 import { Router } from 'express'
 
-import usersRouter from './users'
-import workspacesRouter from './workspaces'
 import channelsRouter from './channels'
 import membersRouter from './members'
 import messagesRouter from './messages'
+import usersRouter from './users'
+import workspacesRouter from './workspaces'
 const router = Router()
 
 router.use('/users', usersRouter)
