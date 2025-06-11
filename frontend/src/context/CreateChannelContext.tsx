@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 
 const CreateChannelContext = createContext<{
   openCreateChannelModal: boolean;
-  setOpenCreateChannelModal: (open: boolean) => void;
+  setOpenCreateChannelModal: (openCreateChannelModal: boolean) => void;
 }>({
   openCreateChannelModal: false,
   setOpenCreateChannelModal: () => {},
@@ -17,10 +17,7 @@ export const CreateChannelContextProvider = ({
 
   return (
     <CreateChannelContext.Provider
-      value={{
-        openCreateChannelModal,
-        setOpenCreateChannelModal,
-      }}
+      value={{ openCreateChannelModal, setOpenCreateChannelModal }}
     >
       {children}
     </CreateChannelContext.Provider>

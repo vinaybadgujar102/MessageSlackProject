@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 import { useChannelMessages } from "@/hooks/context/useChannelMessages";
 
-const SocketContext = createContext({
-  socket: null as Socket | null,
-  joinChannel: (channelId: string) => {},
-  currentChannel: null as string | null,
+const SocketContext = createContext<{
+  socket: Socket | null;
+  joinChannel: (channelId: string) => void;
+  currentChannel: any;
+}>({
+  socket: null as any,
+  joinChannel: () => {},
+  currentChannel: null,
 });
 
 export const SocketContextProvider = ({

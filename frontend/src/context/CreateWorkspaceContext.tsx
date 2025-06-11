@@ -1,11 +1,9 @@
 import { createContext, useState } from "react";
 
-interface CreateWorkspaceContextType {
+const CreateWorkspaceContext = createContext<{
   openCreateWorkspaceModal: boolean;
-  setOpenCreateWorkspaceModal: (open: boolean) => void;
-}
-
-const CreateWorkspaceContext = createContext<CreateWorkspaceContextType>({
+  setOpenCreateWorkspaceModal: (openCreateWorkspaceModal: boolean) => void;
+}>({
   openCreateWorkspaceModal: false,
   setOpenCreateWorkspaceModal: () => {},
 });
