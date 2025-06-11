@@ -3,34 +3,37 @@ import { useNavigate } from "react-router-dom";
 
 import { useSignup } from "@/hooks/apis/auth/useSignup";
 
-import { SignupCard, SignupState } from "./SignupCard";
+import { SignupCard } from "./SignupCard";
 
 export const SignupContainer = () => {
   const navigate = useNavigate();
 
-  const [signupForm, setSignupForm] = useState<SignupState>({
+  const [signupForm, setSignupForm] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     username: "",
   });
 
-  const [validationError, setValidationError] = useState("");
+  const [validationError, setValidationError] = useState<string>("");
 
   const { isPending, isSuccess, error, signupMutation } = useSignup();
 
-  async function onSignUpFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSignupFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("Signup form submitted", signupForm);
+
     if (
       !signupForm.email ||
       !signupForm.password ||
       !signupForm.confirmPassword ||
       !signupForm.username
     ) {
-      console.error("Please fill all the fields");
-      setValidationError("Please fill all the fields");
+      console.error("All fields are required");
+      setValidationError("All fields are required");
       return;
     }
+
     if (signupForm.password !== signupForm.confirmPassword) {
       console.error("Passwords do not match");
       setValidationError("Passwords do not match");
@@ -48,21 +51,21 @@ export const SignupContainer = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/auth/signin");
+      setTimeout(() => {
+        navigate("/auth/signin");
+      }, 3000);
     }
   }, [isSuccess, navigate]);
 
   return (
-    <div>
-      <SignupCard
-        isPending={isPending}
-        isSuccess={isSuccess}
-        error={error}
-        signupForm={signupForm}
-        setSignupForm={setSignupForm}
-        validationError={validationError}
-        onSignUpFormSubmit={onSignUpFormSubmit}
-      />
-    </div>
+    <SignupCard
+      error={error}
+      isPending={isPending}
+      isSuccess={isSuccess}
+      signupForm={signupForm}
+      setSignupForm={setSignupForm}
+      validationError={validationError}
+      onSignupFormSubmit={onSignupFormSubmit}
+    />
   );
 };

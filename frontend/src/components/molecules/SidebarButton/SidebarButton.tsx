@@ -13,10 +13,10 @@ export const SidebarButton = ({ Icon, label }: SidebarButtonProps) => {
         className="size-9 p-2 group-hover:bg-accent/20"
       >
         <Icon className="size-5 text-white group-hover:scale-110 transition-all" />
-        <span className="text-[10px] text-white group-hover:text-accent">
-          {label}
-        </span>
       </Button>
+      <span className="text-[10px] text-white group-hover:text-accent">
+        {label}
+      </span>
     </div>
   );
 };

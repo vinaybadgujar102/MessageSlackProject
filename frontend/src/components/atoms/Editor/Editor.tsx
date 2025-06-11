@@ -1,46 +1,43 @@
 import "quill/dist/quill.snow.css"; // ES6
 
 import { ImageIcon, XIcon } from "lucide-react";
-import Quill, { Delta, Op } from "quill";
+import Quill, { Delta } from "quill";
 import { useEffect, useRef, useState } from "react";
 import { MdSend } from "react-icons/md";
 import { PiTextAa } from "react-icons/pi";
 
 import { Button } from "@/components/ui/button";
-
 import { Hint } from "../Hint/Hint";
 
-type EditorProps = {
+interface EditorProps {
   onSubmit: (data: { body: string; image: File | null }) => void;
-};
+  defaultValue?: Delta;
+}
 
-export const Editor = ({ onSubmit }: EditorProps) => {
+export const Editor = ({ onSubmit, defaultValue }: EditorProps) => {
   const [isToolbarVisible, setIsToolbarVisible] = useState(false);
-
   const [image, setImage] = useState<File | null>(null);
 
-  const containerRef = useRef<HTMLDivElement>(null); // reqd to initialize the editor
-  const defaultValueRef = useRef<Delta | Op[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const defaultValueRef = useRef<Delta | undefined>(defaultValue);
   const quillRef = useRef<Quill | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   function toggleToolbar() {
     setIsToolbarVisible(!isToolbarVisible);
-    if (!containerRef.current) return;
-    const toolbar = containerRef.current.querySelector(".ql-toolbar");
+    const toolbar = containerRef.current?.querySelector(".ql-toolbar");
     if (toolbar) {
       toolbar.classList.toggle("hidden");
     }
   }
 
   useEffect(() => {
-    if (!containerRef.current) return; // if containerRef is not initialized, return
+    if (!containerRef.current) return;
 
-    const container = containerRef.current; // get the container element
-
+    const container = containerRef.current;
     const editorContainer = container.appendChild(
       container.ownerDocument.createElement("div")
-    ); // create a new div element and append it to the container
+    );
 
     const options = {
       theme: "snow",
@@ -63,7 +60,10 @@ export const Editor = ({ onSubmit }: EditorProps) => {
               key: "Enter",
               shiftKey: true,
               handler: () => {
-                quill.insertText(quill.getSelection()?.index || 0, "\n"); // insert a new line
+                const quill = quillRef.current;
+                if (quill) {
+                  quill.insertText(quill.getSelection()?.index || 0, "\n");
+                }
               },
             },
           },
@@ -72,16 +72,17 @@ export const Editor = ({ onSubmit }: EditorProps) => {
     };
 
     const quill = new Quill(editorContainer, options);
-
     quillRef.current = quill;
-    quillRef.current.focus();
+    quill.focus();
 
-    quill.setContents(defaultValueRef.current);
+    if (defaultValueRef.current) {
+      quill.setContents(defaultValueRef.current);
+    }
   }, []);
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col border border-slate-300 rounded-md overflow-hidden focus-within:shadow-sm focus-within:border-slate-400 bg-white ">
+      <div className="flex flex-col border border-slate-300 rounded-md overflow-hidden focus-within:shadow-sm focus-within:border-slate-400 bg-white">
         <div className="h-full ql-custom" ref={containerRef} />
         {image && (
           <div className="p-2">
@@ -90,8 +91,9 @@ export const Editor = ({ onSubmit }: EditorProps) => {
                 className="hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[5] border-2 border-white items-center justify-center"
                 onClick={() => {
                   setImage(null);
-                  if (!imageInputRef.current) return;
-                  imageInputRef.current.value = "";
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
                 }}
               >
                 <XIcon className="size-4" />
@@ -99,6 +101,7 @@ export const Editor = ({ onSubmit }: EditorProps) => {
               <img
                 src={URL.createObjectURL(image)}
                 className="rounded-xl overflow-hidden border object-cover"
+                alt="Uploaded content"
               />
             </div>
           </div>
@@ -110,24 +113,17 @@ export const Editor = ({ onSubmit }: EditorProps) => {
             side="bottom"
             align="center"
           >
-            <Button
-              size="icon"
-              variant="ghost"
-              disabled={false}
-              onClick={toggleToolbar}
-            >
+            <Button size="icon" variant="ghost" onClick={toggleToolbar}>
               <PiTextAa className="size-4" />
             </Button>
           </Hint>
 
-          <Hint label="Image" align="center" side="bottom">
+          <Hint label="Image" side="bottom" align="center">
             <Button
               size="icon"
               variant="ghost"
-              disabled={false}
               onClick={() => {
-                if (!imageInputRef.current) return;
-                imageInputRef.current.click();
+                imageInputRef.current?.click();
               }}
             >
               <ImageIcon className="size-4" />
@@ -139,26 +135,29 @@ export const Editor = ({ onSubmit }: EditorProps) => {
             className="hidden"
             ref={imageInputRef}
             onChange={(e) => {
-              if (!e.target.files?.length) return;
-              setImage(e.target.files[0]);
+              const file = e.target.files?.[0] || null;
+              setImage(file);
             }}
+            accept="image/*"
           />
 
-          <Hint label="Send Message" align="center" side="bottom">
+          <Hint label="Send Message" side="bottom" align="center">
             <Button
               size="icon"
               className="ml-auto bg-[#007a6a] hover:bg-[#007a6a]/80 text-white"
               onClick={() => {
-                const messageContent = JSON.stringify(
-                  quillRef.current?.getContents()
-                );
-                onSubmit({ body: messageContent, image });
-                quillRef.current?.setText("");
-                setImage(null);
-                if (!imageInputRef.current) return;
-                imageInputRef.current.value = "";
+                if (quillRef.current) {
+                  const messageContent = JSON.stringify(
+                    quillRef.current.getContents()
+                  );
+                  onSubmit({ body: messageContent, image });
+                  quillRef.current.setText("");
+                  setImage(null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }
               }}
-              disabled={false}
             >
               <MdSend className="size-4" />
             </Button>

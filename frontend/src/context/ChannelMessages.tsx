@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useState } from "react";
 
-const ChannelMessages = createContext({
+const ChannelMessages = createContext<{
+  messageList: any;
+  setMessageList: (messageList: any) => void;
+}>({
   messageList: [],
-  setMessageList: (messageList: any) => {},
+  setMessageList: () => {},
 });
 
 export const ChannelMessagesProvider = ({

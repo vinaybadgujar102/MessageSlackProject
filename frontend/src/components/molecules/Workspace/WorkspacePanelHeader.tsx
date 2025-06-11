@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ListFilterIcon, SquarePen } from "lucide-react";
+import { ChevronDownIcon, ListFilterIcon, SquarePenIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { WorkspaceInviteModal } from "@/components/organisms/Modals/WorkspaceInviteModal";
@@ -12,21 +12,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useWorkspacePreferencesModal } from "@/hooks/context/useWorkspacePreferencesModal";
+// import { Workspace } from '@/types/workspace';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
-  const { setWorkspace } = useWorkspacePreferencesModal();
+interface WorkspacePanelHeaderProps {
+  workspace: any;
+}
+
+export const WorkspacePanelHeader = ({
+  workspace,
+}: WorkspacePanelHeaderProps) => {
+  console.log("workspace is", workspace);
 
   const [openInviteModal, setOpenInviteModal] = useState(false);
 
-  const workspaceMembers = workspace?.members;
+  const { setWorkspace } = useWorkspacePreferencesModal();
+
+  const workspacemembers = workspace?.members;
 
   const { auth } = useAuth();
 
-  const isLoggedInUserAdminOfWorkspace = workspaceMembers?.some(
+  console.log(auth);
+
+  const isLoggedInUserAdminOfWorkspace = workspacemembers?.find(
     (member: any) =>
       member.memberId._id === auth?.user?._id && member.role === "admin"
   );
+
+  console.log(isLoggedInUserAdminOfWorkspace);
 
   const { setOpenPreferences, setInitialValue } =
     useWorkspacePreferencesModal();
@@ -38,21 +50,22 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
   return (
     <>
       <WorkspaceInviteModal
-        workspaceName={workspace?.name}
-        joinCode={workspace?.joinCode}
         openInviteModal={openInviteModal}
         setOpenInviteModal={setOpenInviteModal}
+        workspaceName={workspace?.name}
+        joinCode={workspace?.joinCode}
         workspaceId={workspace?._id}
       />
-      <div className="flex items-center justify-between px-4 h-[40px] gap-0.5">
+
+      <div className="flex items-center justify-between px-4 h-[50px] gap-0.5">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button
               variant="transparent"
-              className="font-semibold text-lg w-auto p-1.5 overflow-hidden "
+              className="font-semibold text-lg w-auto p-1.5 overflow-hidden"
             >
-              <span className="truncate">{workspace.name}</span>
-              <ChevronDownIcon className="size-4" />
+              <span className="truncate">{workspace?.name}</span>
+              <ChevronDownIcon className="size-5 ml-1" />
             </Button>
           </DropdownMenuTrigger>
 
@@ -72,18 +85,20 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
             {isLoggedInUserAdminOfWorkspace && (
               <>
                 <DropdownMenuItem
+                  className="cursor-pointer py-2"
                   onClick={() => {
                     setInitialValue(workspace?.name);
                     setOpenPreferences(true);
                   }}
-                  className="cursor-pointer py-2"
                 >
                   Preferences
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => setOpenInviteModal(true)}
                   className="cursor-pointer py-2"
+                  onClick={() => {
+                    setOpenInviteModal(true);
+                  }}
                 >
                   Invite people to {workspace?.name}
                 </DropdownMenuItem>
@@ -94,10 +109,11 @@ export const WorkspacePanelHeader = ({ workspace }: { workspace: any }) => {
 
         <div className="flex items-center gap-0.5">
           <Button variant="transparent" size="icon">
-            <ListFilterIcon className="size-4" />
+            <ListFilterIcon className="size-5" />
           </Button>
+
           <Button variant="transparent" size="icon">
-            <SquarePen className="size-4" />
+            <SquarePenIcon className="size-5" />
           </Button>
         </div>
       </div>

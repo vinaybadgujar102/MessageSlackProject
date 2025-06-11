@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Copy, RefreshCw } from "lucide-react";
+import { CopyIcon, RefreshCcwIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,75 +8,80 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useResetJoinCode } from "@/hooks/apis/workspaces/userResetJoinCode";
+import { useResetJoinCode } from "@/hooks/apis/workspaces/useResetJoinCode";
 import { useToast } from "@/hooks/use-toast";
 
-export const WorkspaceInviteModal = ({
-  workspaceName,
-  joinCode,
-  openInviteModal,
-  setOpenInviteModal,
-  workspaceId,
-}: {
-  workspaceName: string;
-  joinCode: string;
+interface WorkspaceInviteModalProps {
   openInviteModal: boolean;
   setOpenInviteModal: (open: boolean) => void;
+  workspaceName: string;
+  joinCode: string;
   workspaceId: string;
-}) => {
+}
+
+export const WorkspaceInviteModal = ({
+  openInviteModal,
+  setOpenInviteModal,
+  workspaceName,
+  joinCode,
+  workspaceId,
+}: WorkspaceInviteModalProps) => {
   const { toast } = useToast();
 
   const { resetJoinCodeMutation } = useResetJoinCode(workspaceId);
 
-  const handleCopy = async () => {
+  async function handleCopy() {
     const inviteLink = `${joinCode}`;
     await navigator.clipboard.writeText(inviteLink);
     toast({
-      title: "Copied to clipboard",
+      title: "Link copied to clipboard",
+      type: "foreground",
     });
-  };
+  }
 
-  const handleResetCode = async () => {
+  async function handleResetCode() {
     try {
       await resetJoinCodeMutation();
       toast({
         title: "Join code reset successfully",
+        type: "foreground",
       });
-    } catch (err: any) {
-      toast({
-        title: "Error in resetting join code",
-        description: err.message,
-      });
+    } catch (error) {
+      console.log("Error in resetting join code", error);
     }
-  };
+  }
+
   return (
     <Dialog open={openInviteModal} onOpenChange={setOpenInviteModal}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Invite people to {workspaceName}</DialogTitle>
           <DialogDescription>
-            Use the code shown below to invite people to {workspaceName}
+            Use the code shown below to invite people to your workspace.
           </DialogDescription>
         </DialogHeader>
+
         <div className="flex flex-col items-center justify-center py-10 gap-y-4">
           <p className="font-bold text-4xl uppercase">{joinCode}</p>
           <Button size="sm" variant="ghost" onClick={handleCopy}>
-            Copy Link <Copy className="size-4 ml-2" />
+            Copy Code
+            <CopyIcon className="size-4 ml-2" />
           </Button>
+
+          {/* Link to redirect the user in a new tab to the join page */}
+          <a
+            href={`/workspaces/join/${workspaceId}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-500"
+          >
+            Redirect to join page
+          </a>
         </div>
-
-        <a
-          href={`/workspaces/join/${workspaceId}`}
-          target="_blank"
-          rel="noreferrer"
-          className="text-sm text-gray-500"
-        >
-          Redirect to Join Page
-        </a>
-
         <div className="flex items-center justify-center w-full">
           <Button variant="outline" onClick={handleResetCode}>
-            Reset Join Code <RefreshCw className="size-4 ml-2" />
+            Reset Join Code
+            <RefreshCcwIcon className="size-4 ml-2" />
           </Button>
         </div>
       </DialogContent>

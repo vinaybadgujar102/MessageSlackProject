@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  AlertTriangle,
-  LucideLoader2,
+  AlertTriangleIcon,
+  HashIcon,
+  Loader,
   MessageSquareTextIcon,
   SendHorizonalIcon,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { SideBarItem } from "@/components/atoms/SideBarItem/SideBarItem";
+import { UserItem } from "@/components/atoms/UserItem/UserItem";
 import { WorkspacePanelHeader } from "@/components/molecules/Workspace/WorkspacePanelHeader";
 import { WorkspacePanelSection } from "@/components/molecules/Workspace/WorkspacePanelSection";
-import { UserItem } from "@/components/UserItem/UserItem";
 import { useGetWorkspaceById } from "@/hooks/apis/workspaces/useGetWorkspaceById";
 import { useCreateChannelModal } from "@/hooks/context/useCreateChannelModal";
 
@@ -18,21 +18,21 @@ export const WorkspacePanel = () => {
   const { workspaceId } = useParams();
 
   const { setOpenCreateChannelModal } = useCreateChannelModal();
-
   const { workspace, isFetching, isSuccess } = useGetWorkspaceById(workspaceId);
 
   if (isFetching) {
     return (
-      <div className="flex flex-col gap-y-2 text-white items-center justify-center h-full">
-        <LucideLoader2 className="size-4 animate-spin" />
+      <div className="flex flex-col gap-y-2 h-full items-center justify-center text-white">
+        <Loader className="animate-spin size-6 text-white" />
       </div>
     );
   }
 
   if (!isSuccess) {
     return (
-      <div className="flex flex-col gap-y-2 text-white items-center justify-center h-full">
-        <AlertTriangle className="size-6 text-white" />
+      <div className="flex flex-col gap-y-2 h-full items-center justify-center text-white">
+        <AlertTriangleIcon className="size-6 text-white" />
+        Something went wrong
       </div>
     );
   }
@@ -40,46 +40,49 @@ export const WorkspacePanel = () => {
   return (
     <div className="flex flex-col h-full bg-slack-medium">
       <WorkspacePanelHeader workspace={workspace} />
-      <div className="flex flex-col pt-2 px-2">
+
+      <div className="flex flex-col px-2 mt-3">
         <SideBarItem
           label="Threads"
           icon={MessageSquareTextIcon}
-          variant="active"
           id="threads"
+          variant="active"
         />
         <SideBarItem
-          label="Drafts and Sends"
+          label="Drafts & Sends"
           icon={SendHorizonalIcon}
-          variant="default"
           id="drafts"
+          variant="default"
         />
       </div>
 
       <WorkspacePanelSection
-        label="Channels"
-        onIconClick={() => setOpenCreateChannelModal(true)}
+        label={"Channels"}
+        onIconClick={() => {
+          setOpenCreateChannelModal(true);
+        }}
       >
         {workspace?.channels?.map((channel: any) => {
           return (
             <SideBarItem
-              key={channel.id}
+              key={channel._id}
+              icon={HashIcon}
               label={channel.name}
-              icon={MessageSquareTextIcon}
-              variant={channel.id === workspaceId ? "active" : "default"}
               id={channel._id}
+              variant="default"
             />
           );
         })}
       </WorkspacePanelSection>
 
-      <WorkspacePanelSection label="Members">
-        {workspace?.members?.map((member: any) => {
+      <WorkspacePanelSection label="Direct messages" onIconClick={() => {}}>
+        {workspace?.members?.map((item: any) => {
           return (
             <UserItem
-              key={member.id}
-              id={member.id}
-              label={member.name}
-              image={member.avatar}
+              key={item.memberId._id}
+              label={item.memberId.username}
+              id={item.memberId._id}
+              image={item.memberId.avatar}
               variant="default"
             />
           );

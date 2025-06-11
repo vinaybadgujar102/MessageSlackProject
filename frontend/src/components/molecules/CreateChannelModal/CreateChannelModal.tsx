@@ -15,12 +15,14 @@ import { useCurrentWorkspace } from "@/hooks/context/useCurrentWorkspace";
 import { useToast } from "@/hooks/use-toast";
 
 export const CreateChannelModal = () => {
-  const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
+
   const { openCreateChannelModal, setOpenCreateChannelModal } =
     useCreateChannelModal();
 
-  const [channelName, setChannelName] = useState<string>("");
+  const [channelName, setChannelName] = useState("");
 
   const { addChannelToWorkspace } = useAddChannelToWorkspace();
 
@@ -37,33 +39,36 @@ export const CreateChannelModal = () => {
       channelName: channelName,
     });
 
-    queryClient.invalidateQueries({
-      queryKey: [`workspace-${currentWorkspace?._id}`],
+    toast({
+      type: "foreground",
+      title: "Channel created successfully",
     });
 
-    toast({
-      title: "Channel created",
-      description: "Channel created successfully",
+    queryClient.invalidateQueries({
+      queryKey: [`fetchWorkspaceById-${currentWorkspace?._id}`],
     });
+
+    handleClose();
   }
 
   return (
     <Dialog open={openCreateChannelModal} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Channel</DialogTitle>
+          <DialogTitle>Create a channel</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleFormSubmit}>
           <Input
             value={channelName}
             onChange={(e) => setChannelName(e.target.value)}
-            placeholder="Channel Name"
             minLength={3}
-            maxLength={20}
+            placeholder="Channel Name e.g. team-announcements"
             required
           />
+
           <div className="flex justify-end mt-4">
-            <Button type="submit">Create Channel</Button>
+            <Button>Create Channel</Button>
           </div>
         </form>
       </DialogContent>

@@ -3,29 +3,29 @@ import { useNavigate } from "react-router-dom";
 
 import { useSignin } from "@/hooks/apis/auth/useSignin";
 
-import { SigninCard, SigninForm } from "./SigninCard";
+import { SigninCard } from "./SigninCard";
 
 export const SigninContainer = () => {
   const navigate = useNavigate();
+
   const [validationError, setValidationError] = useState<string>("");
-  const [signinForm, setSigninForm] = useState<SigninForm>({
+
+  const [signinForm, setSigninForm] = useState({
     email: "",
     password: "",
   });
 
-  const { signinMutation, isPending, isSuccess, error } = useSignin();
+  const { isSuccess, isPending, error, signinMutation } = useSignin();
 
   const onSigninFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!signinForm.email || !signinForm.password) {
-      console.log("please fill all the fields");
+      console.log("Please fill all the fields");
       setValidationError("Please fill all the fields");
       return;
     }
-
     setValidationError("");
-
     await signinMutation({
       email: signinForm.email,
       password: signinForm.password,
@@ -34,19 +34,21 @@ export const SigninContainer = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/home");
+      setTimeout(() => {
+        navigate("/home");
+      }, 3000);
     }
   }, [isSuccess, navigate]);
 
   return (
     <SigninCard
+      onSigninFormSubmit={onSigninFormSubmit}
       signinForm={signinForm}
       setSigninForm={setSigninForm}
-      onSigninFormSubmit={onSigninFormSubmit}
       validationError={validationError}
-      isPending={isPending}
-      isSuccess={isSuccess}
       error={error}
+      isSuccess={isSuccess}
+      isPending={isPending}
     />
   );
 };

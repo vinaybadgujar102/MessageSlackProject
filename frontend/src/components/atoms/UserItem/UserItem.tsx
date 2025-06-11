@@ -1,14 +1,14 @@
+import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { cva } from "class-variance-authority";
 import { Link } from "react-router-dom";
 
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useCurrentWorkspace } from "@/hooks/context/useCurrentWorkspace";
 import { cn } from "@/lib/utils";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-
 const userItemVariants = cva(
-  "flex items-center gap-1.5 justify-start font-normal h-7 mt-2 px-4 text-sm",
+  "flex items-center gap-1.5 justify-start font-normal h-7 px-4 mt-2 text-sm",
   {
     variants: {
       variant: {
@@ -22,17 +22,20 @@ const userItemVariants = cva(
   }
 );
 
-export const UserItem = ({
-  id,
-  label = "Member",
-  image,
-  variant = "default",
-}: {
+interface UserItemProps {
   id: string;
   label: string;
   image: string;
   variant: "default" | "active";
-}) => {
+}
+
+export const UserItem = ({
+  id,
+  label = "Member",
+  image,
+  variant,
+}: UserItemProps) => {
+  console.log("incoming label", label);
   const { currentWorkspace } = useCurrentWorkspace();
 
   return (
@@ -44,8 +47,10 @@ export const UserItem = ({
     >
       <Link to={`/workspace/${currentWorkspace?._id}/members/${id}`}>
         <Avatar>
-          <AvatarImage src={image} />
-          <AvatarFallback>{label.charAt(0).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={image} className="rounded-md" />
+          <AvatarFallback className="rounded-md bg-sky-500 text-white">
+            {label.charAt(0).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <span className="text-sm truncate">{label}</span>
       </Link>

@@ -1,17 +1,19 @@
-import { WorkspaceProvider } from "@/hooks/apis/workspaces/WorkspaceContext";
 import combineContext from "@/utils/combineContext";
 
 import { AuthContextProvider } from "./authContext";
+import { ChannelMessagesProvider } from "./ChannelMessages";
 import { CreateChannelContextProvider } from "./CreateChannelContext";
 import { CreateWorkspaceContextProvider } from "./CreateWorkspaceContext";
-import { SocketContextProvider } from "./SocketContextProvider";
-import { WorkspacePreferencesModalProvider } from "./WorkspacePreferencesModalContext";
+import { SocketContextProvider } from "./SocketContext";
+import { WorkspacePreferencesModalContextProvider } from "./WorkspacePreferencesModalContext";
+import { WorkspaceContextProvider } from "./WorkspaceContext";
 
 export const AppContextProvider = combineContext(
+  ChannelMessagesProvider,
   SocketContextProvider,
   AuthContextProvider,
-  WorkspaceProvider,
+  WorkspaceContextProvider,
   CreateWorkspaceContextProvider,
-  WorkspacePreferencesModalProvider,
+  WorkspacePreferencesModalContextProvider,
   CreateChannelContextProvider
 );

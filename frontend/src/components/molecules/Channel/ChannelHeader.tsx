@@ -9,7 +9,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export const ChannelHeader = ({ name }: { name: string }) => {
+interface ChannelHeaderProps {
+  name: string;
+}
+
+export const ChannelHeader = ({ name }: ChannelHeaderProps) => {
   return (
     <div className="bg-white border-b h-[50px] flex items-center px-4 overflow-hidden">
       <Dialog>

@@ -13,11 +13,10 @@ import { useCreateWorkspaceModal } from "@/hooks/context/useCreateWorkspaceModal
 import { useToast } from "@/hooks/use-toast";
 
 export const UserButton = () => {
-  const { auth, logOut } = useAuth();
-
-  const { toast } = useToast();
-
   const navigate = useNavigate();
+
+  const { auth, logOut } = useAuth();
+  const { toast } = useToast();
 
   const { setOpenCreateWorkspaceModal } = useCreateWorkspaceModal();
 
@@ -25,19 +24,19 @@ export const UserButton = () => {
     setOpenCreateWorkspaceModal(true);
   }
 
-  const handleLogout = () => {
+  async function handleLogout() {
     logOut();
     toast({
-      title: "Logged out",
-      variant: "default",
+      title: "Successfully signed out",
+      type: "foreground",
     });
     navigate("/auth/signin");
-  };
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none relative">
-        <Avatar className="size-10 hover:opacity-75 transition">
+        <Avatar className="size-10 hover:opacity-65 transition">
           <AvatarImage src={auth?.user?.avatar} />
           <AvatarFallback>
             {auth?.user?.username[0].toUpperCase()}

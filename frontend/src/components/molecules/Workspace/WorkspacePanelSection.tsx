@@ -1,18 +1,21 @@
-import { ChevronDown, ChevronRight, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { FaCaretDown, FaCaretRight } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
+
+interface WorkspacePanelSectionProps {
+  children: React.ReactNode;
+  label: string;
+  onIconClick: () => void;
+}
 
 export const WorkspacePanelSection = ({
   children,
   label,
   onIconClick,
-}: {
-  children: React.ReactNode;
-  label: string;
-  onIconClick?: () => void;
-}) => {
-  const [open, setOpen] = useState(false);
+}: WorkspacePanelSectionProps) => {
+  const [open, setOpen] = useState(true);
 
   return (
     <div className="flex flex-col mt-3 px-2">
@@ -23,33 +26,31 @@ export const WorkspacePanelSection = ({
           className="p-0.5 text-sm size-6 text-[#f9edffcc]"
         >
           {open ? (
-            <ChevronDown className="size-4" />
+            <FaCaretDown className="size-4" />
           ) : (
-            <ChevronRight className="size-4" />
+            <FaCaretRight className="size-4" />
           )}
         </Button>
-
         <Button
           variant="transparent"
           size="sm"
-          className="text-sm px-1.5 text-[#f9edffcc] justify-start items-center"
+          className="group px-.15 text-sm text-[#f9edffcc] h-[30px] justify-start items-center overflow-hidden"
         >
           <span>{label}</span>
         </Button>
 
         {onIconClick && (
           <Button
-            variant="transparent"
+            variant="default"
             size="sm"
-            className="transition ml-auto p-1.5 text-sm size-6 text-[#f9edffcc] hover:bg-slack-medium"
             onClick={onIconClick}
+            className="text-[#f9edffcc] transition opacity ml-auto p-0.5 text-sm size-6 hover:bg-slack-dark"
           >
-            <PlusIcon className="size-4" />
+            <PlusIcon className="size-4 text-[#f9edffcc]" />
           </Button>
         )}
       </div>
-
-      {open && <div className="flex flex-col gap-y-2">{children}</div>}
+      {open && children}
     </div>
   );
 };

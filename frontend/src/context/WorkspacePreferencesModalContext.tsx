@@ -1,29 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useState } from "react";
 
 const WorkspacePreferencesModalContext = createContext<{
   openPreferences: boolean;
-  setOpenPreferences: (open: boolean) => void;
-  initialValue: any;
-  setInitialValue: (value: any) => void;
+  setOpenPreferences: (openPreferences: boolean) => void;
+  initialValue: string;
+  setInitialValue: (initialValue: string) => void;
   workspace: any;
   setWorkspace: (workspace: any) => void;
 }>({
   openPreferences: false,
   setOpenPreferences: () => {},
-  initialValue: null,
+  initialValue: "",
   setInitialValue: () => {},
   workspace: null,
   setWorkspace: () => {},
 });
-
-export const WorkspacePreferencesModalProvider = ({
+export const WorkspacePreferencesModalContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
   const [openPreferences, setOpenPreferences] = useState(false);
-  const [initialValue, setInitialValue] = useState<any>(null);
+  const [initialValue, setInitialValue] = useState("Edit Workspace");
   const [workspace, setWorkspace] = useState(null);
 
   return (

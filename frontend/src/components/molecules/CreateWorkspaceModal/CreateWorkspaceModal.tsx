@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,33 +15,34 @@ import { useCreateWorkspaceModal } from "@/hooks/context/useCreateWorkspaceModal
 
 export const CreateWorkspaceModal = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+
   const { openCreateWorkspaceModal, setOpenCreateWorkspaceModal } =
     useCreateWorkspaceModal();
 
-  const { isPending, isSuccess, createWorkspaceMutation } =
-    useCreateWorkspace();
-
-  console.log(isSuccess);
+  const { isPending, createWorkspaceMutation } = useCreateWorkspace();
 
   const [workspaceName, setWorkspaceName] = useState("");
+
+  const navigate = useNavigate();
 
   function handleClose() {
     setOpenCreateWorkspaceModal(false);
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
       const data = await createWorkspaceMutation({
         name: workspaceName,
         description: "",
       });
-      queryClient.invalidateQueries({ queryKey: ["fetchWorkspaces"] });
-      // @ts-expect-error
-      navigate(`/workspace/${data._id}`);
+      console.log("Created the workspace", data);
+      navigate(`/workspaces/${data._id}`);
+      queryClient.invalidateQueries({
+        queryKey: ["fetchWorkspaces"],
+      });
     } catch (error) {
-      console.error("Not able to create a new workspace", error);
+      console.log("Not able to create a new workspace", error);
     } finally {
       setWorkspaceName("");
       setOpenCreateWorkspaceModal(false);
@@ -53,23 +53,21 @@ export const CreateWorkspaceModal = () => {
     <Dialog open={openCreateWorkspaceModal} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Workspace</DialogTitle>
+          <DialogTitle>Create a new workspace</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleFormSubmit}>
           <Input
             required
             disabled={isPending}
             minLength={3}
-            placeholder="Put your workspace name here (e.g. 'My Workspace')"
+            placeholder="Put the workspace name e.g. MyWorkspace, Dev Workspace etc .."
             value={workspaceName}
             onChange={(e) => setWorkspaceName(e.target.value)}
           />
 
           <div className="flex justify-end mt-5">
-            <Button type="submit" disabled={isPending}>
-              Create Workspace
-            </Button>
+            <Button disabled={isPending}>Create workspace</Button>
           </div>
         </form>
       </DialogContent>

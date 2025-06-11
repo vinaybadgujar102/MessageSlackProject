@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
-import { LucideLoader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -17,51 +16,45 @@ export const WorkspaceSwitcher = () => {
 
   const { workspaceId } = useParams();
 
-  const { workspace, isFetching } = useGetWorkspaceById(workspaceId);
+  const { isFetching, workspace } = useGetWorkspaceById(workspaceId);
 
-  const { workspaces, isFetching: isFetchingWorkspaces } = useFetchWorkspace();
+  const { workspaces, isFetching: isFetchingWorkspace } = useFetchWorkspace();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button className="size-9 relative overflow-hidden bg-[#ababad] hover:bg-[#ababad]/80 font-semibold text-slate-700">
+        <Button className="size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 font-semibold text-slate-800 text-xl">
           {isFetching ? (
-            <LucideLoader2 className="size-4 animate-spin" />
+            <Loader className="size-5 animate-spin" />
           ) : (
-            <span className="text-sm">{workspace?.name.toUpperCase()}</span>
+            workspace?.name.charAt(0).toUpperCase()
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem className="cursor-pointer flex-col justify-start items-start">
-          {workspace?.name.toUpperCase()}
-          <span className="text-xs text-muted-foreground">
+          {workspace?.name}
+          <span className="text-xs text-muted-foregorund">
             (Active Workspace)
           </span>
         </DropdownMenuItem>
-        {isFetchingWorkspaces ? (
-          <div className="flex items-center justify-center">
-            <LucideLoader2 className="size-4 animate-spin" />
-          </div>
+        {isFetchingWorkspace ? (
+          <Loader className="size-5 animate-spin" />
         ) : (
-          <div className="flex flex-col gap-2">
-            {workspaces?.map((workspace: any) => {
-              if (workspace._id === workspaceId) {
-                return null;
-              }
-              return (
-                <DropdownMenuItem
-                  key={workspace.id}
-                  className="cursor-pointer flex-col justify-start items-start"
-                  onClick={() => {
-                    navigate(`/workspaces/${workspace.id}`);
-                  }}
-                >
-                  <p className="truncate">{workspace.name.toUpperCase()}</p>
-                </DropdownMenuItem>
-              );
-            })}
-          </div>
+          workspaces?.map((workspace: any) => {
+            if (workspace._id === workspaceId) {
+              return null;
+            }
+            return (
+              <DropdownMenuItem
+                className="cursor-pointer flex-col justify-start items-start"
+                onClick={() => navigate(`/workspaces/${workspace._id}`)}
+                key={workspace._id}
+              >
+                <p className="truncate">{workspace?.name}</p>
+              </DropdownMenuItem>
+            );
+          })
         )}
       </DropdownMenuContent>
     </DropdownMenu>

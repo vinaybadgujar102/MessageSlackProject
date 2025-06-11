@@ -1,19 +1,8 @@
-import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-type SideBarItemVariants = VariantProps<typeof sideBarItemVariants>;
-
-interface SideBarItemProps {
-  label: string;
-  icon: React.ElementType;
-  id: string;
-  variant: SideBarItemVariants["variant"];
-}
 
 const sideBarItemVariants = cva(
   "flex items-center justify-start gap-1.5 font-normal h-7 px-[20px] text-sm overflow-hidden",
@@ -30,17 +19,20 @@ const sideBarItemVariants = cva(
   }
 );
 
+interface SideBarItemProps {
+  label: string;
+  id: string;
+  icon: React.ElementType;
+  variant: "default" | "active";
+}
+
 export const SideBarItem = ({
   label,
+  id, // channelId
   icon: Icon,
   variant,
-  id,
 }: SideBarItemProps) => {
   const { workspaceId } = useParams();
-
-  if (!workspaceId) {
-    return null;
-  }
 
   return (
     <Button
