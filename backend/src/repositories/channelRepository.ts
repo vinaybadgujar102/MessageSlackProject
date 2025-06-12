@@ -1,11 +1,11 @@
-import crudRespository from './crudRepository'
 import Channel from '../schema/channel'
+import crudRepository from './crudRepository'
 
 const channelRepository = {
-  ...crudRespository(Channel),
+  ...crudRepository(Channel),
   getChannelWithWorkspaceDetails: async function (channelId: string) {
     const channel = await Channel.findById(channelId).populate('workspaceId')
-    return channel;
+    return channel
   }
 }
 

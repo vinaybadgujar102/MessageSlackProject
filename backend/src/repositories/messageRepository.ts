@@ -1,25 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Message from '../schema/message'
-import crudRespository from './crudRepository'
+import crudRepository from './crudRepository'
 
 const messageRepository = {
-  ...crudRespository(Message),
-
-  getPaginatedMessages: async (
+  ...crudRepository(Message),
+  getPaginatedMessaged: async (
     messageParams: any,
     page: number,
     limit: number
   ) => {
     const messages = await Message.find(messageParams)
-      .sort({
-        createdAt: -1
-      })
+      .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate({
-        path: 'senderId',
-        select: 'username email avatar'
-      })
+      .populate('senderId', 'username email avatar')
+
     return messages
+  },
+  getMessageDetails: async (messageId: string) => {
+    const message = await Message.findById(messageId).populate(
+      'senderId',
+      'username email avatar'
+    )
+    return message
   }
 }
 
