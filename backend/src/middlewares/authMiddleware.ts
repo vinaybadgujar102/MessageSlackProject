@@ -1,21 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import jwt from 'jsonwebtoken'
 
-import { verifyJWT } from '../utils/common/authUtils'
+import { JWT_SECRET } from '../config/serverConfig'
+import userRepository from '../repositories/userRepository'
 import {
   customErrorResponse,
   internalServerError
 } from '../utils/common/responseObject'
-import userRepository from '../repositories/userRepository'
-
-// Add this interface to extend Request
-declare global {
-  namespace Express {
-    interface Request {
-      user?: any
-    }
-  }
-}
 
 export const isAuthenticated = async (
   req: Request,
@@ -24,48 +16,43 @@ export const isAuthenticated = async (
 ) => {
   try {
     const token = req.headers['x-access-token']
+
     if (!token) {
-      res.status(StatusCodes.FORBIDDEN).json(
+      return res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
-          message: 'No token provided',
-          explaination: 'invalid data sent by the client'
+          message: 'No auth token provided'
         })
       )
     }
 
-    const response = verifyJWT(token as string)
+    const response = jwt.verify(token as string, JWT_SECRET as string)
+
     if (!response) {
-      res.status(StatusCodes.FORBIDDEN).json(
+      return res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
-          message: 'Invalid token',
-          explaination: 'invalid token sent by the client'
-        })
-      )
-    }
-    const decodedToken = response as { id: string }
-    const user = await userRepository.getById(decodedToken.id)
-    if (!user) {
-      res.status(StatusCodes.NOT_FOUND).json(
-        customErrorResponse({
-          message: 'User not found',
-          explaination: 'User associated with token no longer exists'
+          explanation: 'Invalid data sent from the client',
+          message: 'Invalid auth token provided'
         })
       )
     }
 
+    const user = await userRepository.getById(response.id as string)
     req.user = user.id
     next()
-  } catch (error: unknown) {
-    console.log('Auth middleware error: ', error)
-    if (error instanceof Error && error.name === 'JsonWebTokenError') {
-      res.status(StatusCodes.FORBIDDEN).json(
+  } catch (error: any) {
+    console.log('Auth middleware error', error)
+    if (
+      error.name === 'JsonWebTokenError' ||
+      error.name === 'TokenExpiredError'
+    ) {
+      return res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
-          message: 'Invalid token',
-          explaination: 'invalid token sent by the client'
+          explanation: 'Invalid data sent from the client',
+          message: 'Invalid auth token provided'
         })
       )
     }
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json(internalServerError(error))
   }
