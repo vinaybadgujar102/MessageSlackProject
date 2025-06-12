@@ -1,8 +1,9 @@
-import { Router } from 'express'
-import { getChannelByIdController } from '../../controllers/channelController'
-import { isAuthenticated } from '../../middlewares/authMiddleware'
+import express from 'express'
 
-const router = Router()
+import { getChannelByIdController } from '../../controllers/channelController.js'
+import { isAuthenticated } from '../../middlewares/authMiddleware.js'
+
+const router = express.Router()
 
 router.get('/:channelId', isAuthenticated, getChannelByIdController)
 

@@ -1,9 +1,9 @@
-import { Router } from 'express'
-import { getChannelByIdController } from '../../controllers/channelController'
-import { isAuthenticated } from '../../middlewares/authMiddleware'
-import { isMemberPartOfWorkspaceController } from '../../controllers/memberController'
+import express from 'express'
 
-const router = Router()
+import { isMemberPartOfWorkspaceController } from '../../controllers/memberController'
+import { isAuthenticated } from '../../middlewares/authMiddleware'
+
+const router = express.Router()
 
 router.get(
   '/workspace/:workspace',

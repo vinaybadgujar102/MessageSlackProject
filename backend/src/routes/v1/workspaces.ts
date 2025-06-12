@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import express from 'express'
 
 import {
   addChannelToWorkspaceController,
@@ -9,7 +9,7 @@ import {
   getWorkspaceController,
   getWorkspacesUserIsMemberOfController,
   joinWorkspaceController,
-  resetWorkspaceJoinCodeController,
+  resetJoinCodeController,
   updateWorkspaceController
 } from '../../controllers/workspaceController'
 import { isAuthenticated } from '../../middlewares/authMiddleware'
@@ -20,7 +20,7 @@ import {
 } from '../../validators/workspaceSchema'
 import { validate } from '../../validators/zodValidator'
 
-const router = Router()
+const router = express.Router()
 
 router.post(
   '/',
@@ -31,7 +31,7 @@ router.post(
 
 router.get('/', isAuthenticated, getWorkspacesUserIsMemberOfController)
 
-router.delete('/:id', isAuthenticated, deleteWorkspaceController)
+router.delete('/:workspaceId', isAuthenticated, deleteWorkspaceController)
 
 router.get('/:workspaceId', isAuthenticated, getWorkspaceController)
 
@@ -58,7 +58,7 @@ router.put(
 router.put(
   '/:workspaceId/joinCode/reset',
   isAuthenticated,
-  resetWorkspaceJoinCodeController
+  resetJoinCodeController
 )
 
 export default router

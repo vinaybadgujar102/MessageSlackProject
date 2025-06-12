@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import express from 'express'
 
 import {
   getMessages,
@@ -6,9 +6,9 @@ import {
 } from '../../controllers/messageController'
 import { isAuthenticated } from '../../middlewares/authMiddleware'
 
-const router = Router()
+const router = express.Router()
 
 router.get('/pre-signed-url', isAuthenticated, getPresignedUrlFromAWS)
-router.get('/messages/:channelId', isAuthenticated, getMessages)
+router.get('/:channelId', isAuthenticated, getMessages)
 
 export default router

@@ -18,22 +18,24 @@ export const isAuthenticated = async (
     const token = req.headers['x-access-token']
 
     if (!token) {
-      return res.status(StatusCodes.FORBIDDEN).json(
+      res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
           message: 'No auth token provided'
         })
       )
+      return
     }
 
     const response = jwt.verify(token as string, JWT_SECRET as string)
 
     if (!response) {
-      return res.status(StatusCodes.FORBIDDEN).json(
+      res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
           explanation: 'Invalid data sent from the client',
           message: 'Invalid auth token provided'
         })
       )
+      return
     }
 
     const user = await userRepository.getById(response.id as string)
@@ -45,15 +47,17 @@ export const isAuthenticated = async (
       error.name === 'JsonWebTokenError' ||
       error.name === 'TokenExpiredError'
     ) {
-      return res.status(StatusCodes.FORBIDDEN).json(
+      res.status(StatusCodes.FORBIDDEN).json(
         customErrorResponse({
           explanation: 'Invalid data sent from the client',
           message: 'Invalid auth token provided'
         })
       )
+      return
     }
-    return res
+    res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json(internalServerError(error))
+    return
   }
 }
