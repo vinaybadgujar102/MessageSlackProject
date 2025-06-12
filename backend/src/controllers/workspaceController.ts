@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes'
 
 import { verifyTokenService } from '@/service/userService'
@@ -13,11 +14,12 @@ import {
   resetWorkspaceJoinCodeService,
   updateWorkspaceService
 } from '@/service/workspaceService'
+
 import {
   customErrorResponse,
   internalServerError,
   successResponse
-} from '@/utils/common/responseObject'
+} from '../utils/common/responseObject'
 
 export const createWorkspaceController = async (req: any, res: any) => {
   try {

@@ -1,64 +1,59 @@
-import { Request, Response } from 'express'
-import { getMessagesService } from '../service/messageService'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes'
+
+import { s3 } from '@/config/awsConfig'
+import { AWS_BUCKET_NAME } from '@/config/serverConfig'
+
+import { getMessagesService } from '../service/messageService'
 import {
   customErrorResponse,
   internalServerError,
   successResponse
 } from '../utils/common/responseObject'
-import { s3 } from '../config/awsConfig'
-import { AWS_BUCKET_NAME } from '../config/serverConfig'
 
-export const getMessages = async (req: Request, res: Response) => {
+export const getMessages = async (req: any, res: any) => {
   try {
     const messages = await getMessagesService(
       {
         channelId: req.params.channelId
       },
-      Number(req.query.page) || 1,
-      Number(req.query.limit) || 20,
+      req.query.page || 1,
+      req.query.limit || 20,
       req.user
     )
 
-    res
+    return res
       .status(StatusCodes.OK)
-      .json(successResponse(messages, 'Messages fetched successfully'))
+      .json(successResponse(messages, 'Messages Fetched Successfully'))
   } catch (error: any) {
-    console.log('Error in getMessages controller: ', error)
-    res.status(error.statusCode).json(
-      customErrorResponse({
-        message: error.message,
-        explaination: error.explaination
-      })
-    )
+    console.log('User controller error', error)
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error))
+    }
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalServerError(error))
   }
 }
 
-export const getPresignedUrlFromAWS = async (req: Request, res: Response) => {
+export const getPresignedUrlFromAWS = async (req: any, res: any) => {
   try {
     const url = await s3.getSignedUrlPromise('putObject', {
       Bucket: AWS_BUCKET_NAME,
-      Key: `${Date.now}`,
+      Key: `${Date.now()}`,
       Expires: 60 // 1 minute
     })
-    res
+    return res
       .status(StatusCodes.OK)
-      .json(successResponse(url, 'Presigned url fetched successfully'))
-  } catch (error: any) {
-    console.log('Error in getPresignedUrlFromAWS controller: ', error)
-    if (error.statusCode) {
-      res.status(error.statusCode).json(
-        customErrorResponse({
-          message: error.message,
-          explaination: error.explaination
-        })
-      )
+      .json(successResponse(url, 'Presigned URL generated successfully'))
+  } catch (err: any) {
+    console.log('Error in getPresignedUrlFromAWS', err)
+    if (err.statusCode) {
+      return res.status(err.statusCode).json(customErrorResponse(err))
     }
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-      internalServerError({
-        message: 'Internal server error',
-        explaination: error.message
-      })
-    )
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalServerError(err))
   }
 }

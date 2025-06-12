@@ -1,26 +1,31 @@
-import { Request, Response } from 'express'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes'
-import { isMemberPartOfWorkspaceService } from '../service/memberService'
 
-export const isMemberPartOfWorkspaceController = async (
-  req: Request,
-  res: Response
-) => {
+import { isMemberPartOfWorkspaceService } from '../service/memberService'
+import {
+  customErrorResponse,
+  internalServerError,
+  successResponse
+} from '../utils/common/responseObject'
+
+export const isMemberPartOfWorkspaceController = async (req: any, res: any) => {
   try {
     const response = await isMemberPartOfWorkspaceService(
       req.params.workspaceId,
       req.user
     )
-    res.status(StatusCodes.OK).json(response)
+
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'User is a member of the workspace'))
   } catch (error: any) {
-    console.log('Error in isMemberPartOfWorkspaceController', error)
+    console.log('User controller error', error)
     if (error.statusCode) {
-      res.status(error.statusCode).json({
-        message: error.message
-      })
+      return res.status(error.statusCode).json(customErrorResponse(error))
     }
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: 'Internal server error'
-    })
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalServerError(error))
   }
 }
