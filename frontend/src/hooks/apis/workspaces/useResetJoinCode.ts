@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { resetWorkspaceJoinCodeRequest } from "@/apis/workspaces";
 import { useAuth } from "@/hooks/context/useAuth";
+import { resetWorkspaceJoinCodeRequest } from "@/apis/workspaces";
 
 export const useResetJoinCode = (workspaceId: string) => {
   const { auth } = useAuth();
@@ -14,7 +14,10 @@ export const useResetJoinCode = (workspaceId: string) => {
     error,
   } = useMutation({
     mutationFn: () =>
-      resetWorkspaceJoinCodeRequest({ workspaceId, token: auth?.token || "" }),
+      resetWorkspaceJoinCodeRequest({
+        workspaceId,
+        token: auth?.token as string,
+      }),
     onSuccess: () => {
       console.log("Join code reset successfully");
       queryClient.invalidateQueries({

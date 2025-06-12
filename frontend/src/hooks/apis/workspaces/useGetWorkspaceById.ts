@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 
 import { fetchWorkspaceDetailsRequest } from "@/apis/workspaces";
 import { useAuth } from "@/hooks/context/useAuth";
 
-export const useGetWorkspaceById = (workspaceId: string | undefined) => {
-  if (!workspaceId) {
-    throw new Error("Workspace ID is required");
-  }
-
+export const useGetWorkspaceById = (id: string) => {
   const { auth } = useAuth();
   const {
     isFetching,
@@ -16,12 +11,12 @@ export const useGetWorkspaceById = (workspaceId: string | undefined) => {
     error,
     data: workspace,
   } = useQuery({
-    queryKey: [`workspace-${workspaceId}`],
     queryFn: () =>
       fetchWorkspaceDetailsRequest({
-        workspaceId,
-        token: auth?.token || "",
+        workspaceId: id,
+        token: auth?.token as string,
       }),
+    queryKey: [`fetchWorkspaceById-${id}`],
     staleTime: 10000,
   });
 

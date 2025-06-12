@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon, TriangleAlertIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -7,21 +6,19 @@ import { useParams } from "react-router-dom";
 import { ChannelHeader } from "@/components/molecules/Channel/ChannelHeader";
 import { ChatInput } from "@/components/molecules/ChatInput/ChatInput";
 import { Message } from "@/components/molecules/Message/Message";
-import { useSocket } from "@/context/useSocket";
 import { useGetChannelById } from "@/hooks/apis/channels/useGetChannelById";
 import { useGetChannelMessages } from "@/hooks/apis/channels/useGetChannelMessages";
 import { useChannelMessages } from "@/hooks/context/useChannelMessages";
+import { useSocket } from "@/hooks/context/useSocket";
 
 export const Channel = () => {
   const { channelId } = useParams();
 
   const queryClient = useQueryClient();
 
-  const {
-    data: channelDetails,
-    isFetching,
-    isError,
-  } = useGetChannelById(channelId as string);
+  const { channelDetails, isFetching, isError } = useGetChannelById(
+    channelId as string
+  );
   const { setMessageList, messageList } = useChannelMessages();
 
   const { joinChannel } = useSocket();
@@ -39,14 +36,12 @@ export const Channel = () => {
 
   useEffect(() => {
     console.log("ChannelId", channelId);
-    queryClient.invalidateQueries({
-      queryKey: ["getPaginatedMessages"],
-    });
+    queryClient.invalidateQueries({ queryKey: ["getPaginatedMessages"] });
   }, [channelId]);
 
   useEffect(() => {
-    if (!isFetching && !isError && channelId) {
-      joinChannel(channelId);
+    if (!isFetching && !isError) {
+      joinChannel(channelId as string);
     }
   }, [isFetching, isError, joinChannel, channelId]);
 

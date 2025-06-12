@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@tanstack/react-query";
 
 import { signUpRequest } from "@/apis/auth";
@@ -6,34 +5,37 @@ import { useToast } from "@/hooks/use-toast";
 
 export const useSignup = () => {
   const { toast } = useToast();
-
   const {
     isPending,
     isSuccess,
     error,
-    mutate: signupMutation,
+    mutateAsync: signupMutation,
   } = useMutation({
     mutationFn: signUpRequest,
-    onSuccess: (data: any) => {
-      console.log(data);
+    onSuccess: (data) => {
+      console.log("Scuccessfuilly signed up", data);
       toast({
-        title: "Signup successful",
-        description: "You have successfully signed up",
+        title: "Successfully signed up",
+        description:
+          "You will be redirected to the login page in a few seconds",
+        type: "foreground",
       });
     },
-    onError: (error: any) => {
-      console.log("Failed to signup ", error);
+    onError: (error) => {
+      console.error("Failed to sign up", error);
       toast({
-        title: "Signup failed",
-        description: "Please try again",
+        title: "Failed to sign up",
+        description: error.message,
+        type: "foreground",
+        variant: "destructive",
       });
     },
   });
 
   return {
-    signupMutation,
     isPending,
     isSuccess,
     error,
+    signupMutation,
   };
 };

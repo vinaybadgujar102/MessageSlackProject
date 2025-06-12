@@ -19,7 +19,7 @@ export const WorkspaceLayout = ({
         <WorkspaceSidebar />
         <ResizablePanelGroup
           direction="horizontal"
-          autoSaveId="workspace-resize"
+          autoSaveId={"workspace-resize"}
         >
           <ResizablePanel
             defaultSize={20}

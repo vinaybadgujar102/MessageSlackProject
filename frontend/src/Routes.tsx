@@ -57,14 +57,6 @@ export const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="/makepayment"
-        element={
-          <ProtectedRoute>
-            <div>Payments</div>
-          </ProtectedRoute>
-        }
-      />
       <Route path="/workspaces/join/:workspaceId" element={<JoinPage />} />
       <Route path="/*" element={<Notfound />} />
     </Routes>

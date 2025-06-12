@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@tanstack/react-query";
 
 import { signInRequest } from "@/apis/auth";
@@ -12,39 +11,44 @@ export const useSignin = () => {
     isPending,
     isSuccess,
     error,
-    mutate: signinMutation,
+    mutateAsync: signinMutation,
   } = useMutation({
     mutationFn: signInRequest,
-    onSuccess: (response: any) => {
+    onSuccess: (response) => {
+      console.log("Successfully signed in", response);
+
       const userObject = JSON.stringify(response.data);
 
       localStorage.setItem("user", userObject);
       localStorage.setItem("token", response.data.token);
 
       setAuth({
-        user: response.data,
         token: response.data.token,
+        user: response.data,
         isLoading: false,
       });
 
       toast({
-        title: "Signin successful",
-        description: "You have successfully signed in",
+        title: "Successfully signed in",
+        description: "You will be redirected to the home page in a few seconds",
+        type: "foreground",
       });
     },
-    onError: (error: any) => {
-      console.log("Failed to signin ", error);
+    onError: (error) => {
+      console.error("Failed to sign in", error);
       toast({
-        title: "Signin failed",
-        description: "Please try again",
+        title: "Failed to sign in",
+        description: error.message,
+        type: "foreground",
+        variant: "destructive",
       });
     },
   });
 
   return {
-    signinMutation,
     isPending,
     isSuccess,
     error,
+    signinMutation,
   };
 };

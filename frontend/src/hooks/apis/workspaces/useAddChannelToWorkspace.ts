@@ -2,11 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 
 import { addChannelToWorkspaceRequest } from "@/apis/workspaces";
 import { useAuth } from "@/hooks/context/useAuth";
+
 export const useAddChannelToWorkspace = () => {
   const { auth } = useAuth();
-
   const {
-    mutateAsync: addChannelToWorkspace,
+    mutateAsync: addChannelToWorkspaceMutation,
     isPending,
     isSuccess,
     error,
@@ -24,12 +24,17 @@ export const useAddChannelToWorkspace = () => {
         token: auth?.token as string,
       }),
     onSuccess: (data) => {
-      console.log("data in add channel to workspace", data);
+      console.log("Channel added to workspace", data);
     },
     onError: (error) => {
-      console.log("error in add channel to workspace", error);
+      console.log("Error adding channel to workspace", error);
     },
   });
 
-  return { addChannelToWorkspace, isPending, isSuccess, error };
+  return {
+    addChannelToWorkspaceMutation,
+    isPending,
+    isSuccess,
+    error,
+  };
 };

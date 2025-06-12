@@ -7,28 +7,25 @@ export const useCreateWorkspace = () => {
   const { auth } = useAuth();
 
   const {
-    mutate: createWorkspaceMutation,
     isPending,
     isSuccess,
     error,
+    mutateAsync: createWorkspaceMutation,
   } = useMutation({
-    mutationFn: (data: { name: string; description: string }) =>
-      createWorkspaceRequest({
-        ...data,
-        token: auth.token || "",
-      }),
+    mutationFn: (data) =>
+      createWorkspaceRequest({ ...data, token: auth?.token as string }),
     onSuccess: (data) => {
-      console.log("Workspace created successfully", data);
+      console.log("Successfully created workspace", data);
     },
     onError: (error) => {
-      console.log("Error in creating workspace", error);
+      console.error("Failed to create workspace", error);
     },
   });
 
   return {
-    createWorkspaceMutation,
     isPending,
     isSuccess,
     error,
+    createWorkspaceMutation,
   };
 };

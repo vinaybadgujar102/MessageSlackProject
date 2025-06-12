@@ -1,6 +1,6 @@
-import { REDIS_PORT, REDIS_URL } from './serverConfig'
+import { REDIS_HOST, REDIS_PORT } from './serverConfig.js'
 
 export default {
-  host: REDIS_URL!,
-  port: parseInt(REDIS_PORT!)
+  host: REDIS_HOST,
+  port: REDIS_PORT
 }

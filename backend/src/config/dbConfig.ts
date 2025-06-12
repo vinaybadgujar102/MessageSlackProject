@@ -1,55 +1,16 @@
 import mongoose from 'mongoose'
 
-import { DEVELOPMENT_DB_URL, NODE_ENV, PRODUCTION_DB_URL } from './serverConfig'
+import { DEV_DB_URL, NODE_ENV, PROD_DB_URL } from './serverConfig.js'
 
-export class DBConfig {
-  private static instance: DBConfig
-  private isConnected = false
-
-  private constructor() {}
-
-  public static getInstance(): DBConfig {
-    if (!DBConfig.instance) {
-      DBConfig.instance = new DBConfig()
+export default async function connectDB() {
+  try {
+    if (NODE_ENV === 'development') {
+      await mongoose.connect(DEV_DB_URL!)
+    } else if (NODE_ENV === 'production') {
+      await mongoose.connect(PROD_DB_URL!)
     }
-    return DBConfig.instance
-  }
-
-  public async connect(): Promise<void> {
-    if (this.isConnected) {
-      console.log('already connected to db')
-      return
-    }
-    try {
-      const dbUrl =
-        NODE_ENV === 'development' ? DEVELOPMENT_DB_URL : PRODUCTION_DB_URL
-
-      if (!dbUrl) {
-        throw new Error('Database URL is not configured')
-      }
-
-      await mongoose.connect(dbUrl)
-      this.isConnected = true
-      console.log('Connected to DB')
-    } catch (error) {
-      console.error('Failed to connect to DB', error)
-      process.exit(1)
-    }
-  }
-
-  public async disconnect(): Promise<void> {
-    if (!this.isConnected) {
-      console.log('not connected to db')
-      return
-    }
-    try {
-      await mongoose.disconnect()
-      this.isConnected = false
-      console.log('Disconnected from DB')
-    } catch (error) {
-      console.error('Failed to disconnect from DB', error)
-    }
+    console.log(`Connected to mongodb database from ${NODE_ENV} environment`)
+  } catch (error) {
+    console.log('Error connecting to database', error)
   }
 }
-
-export const dbConfig = DBConfig.getInstance()

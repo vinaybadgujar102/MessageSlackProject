@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
-import { getChannelById } from '../service/channelService'
 import { StatusCodes } from 'http-status-codes'
+
+import { getChannelById } from '../service/channelService'
 import {
   customErrorResponse,
   internalServerError,

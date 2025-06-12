@@ -5,12 +5,11 @@ import { useAuth } from "@/hooks/context/useAuth";
 
 export const useAddMemberToWorkspace = (workspaceId: string) => {
   const { auth } = useAuth();
-
   const {
-    mutate: addMemberToWorkspace,
-    isPending,
-    isSuccess,
+    mutateAsync: addMemberToWorkspaceMutation,
     error,
+    isSuccess,
+    isPending,
   } = useMutation({
     mutationFn: () =>
       addMemberToWorkspaceRequest({
@@ -18,12 +17,17 @@ export const useAddMemberToWorkspace = (workspaceId: string) => {
         token: auth?.token as string,
       }),
     onSuccess: () => {
-      console.log("member added to workspace");
+      console.log("Member added to workspace successfully");
     },
     onError: (error) => {
-      console.log("error in add member to workspace", error);
+      console.log("Error in adding member to workspace", error);
     },
   });
 
-  return { addMemberToWorkspace, isPending, isSuccess, error };
+  return {
+    addMemberToWorkspaceMutation,
+    error,
+    isSuccess,
+    isPending,
+  };
 };

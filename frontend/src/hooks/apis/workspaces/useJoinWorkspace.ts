@@ -3,13 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 import { joinWorkspaceRequest } from "@/apis/workspaces";
 import { useAuth } from "@/hooks/context/useAuth";
 
-export const useJoinWorkspace = (workspaceId: string) => {
+export const useJoinWorkspaceRequest = (workspaceId: string) => {
   const { auth } = useAuth();
-
   const {
-    mutate: joinWorkspaceMutation,
-    isPending,
+    mutateAsync: joinWorkspaceMutation,
     isSuccess,
+    isPending,
     error,
   } = useMutation({
     mutationFn: (joinCode: string) =>
@@ -22,9 +21,14 @@ export const useJoinWorkspace = (workspaceId: string) => {
       console.log("Workspace joined successfully");
     },
     onError: (error) => {
-      console.log("Error in join workspace", error);
+      console.log("Error in joining workspace", error);
     },
   });
 
-  return { joinWorkspaceMutation, isPending, isSuccess, error };
+  return {
+    joinWorkspaceMutation,
+    isSuccess,
+    isPending,
+    error,
+  };
 };

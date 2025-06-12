@@ -5,8 +5,12 @@ import { useAuth } from "@/hooks/context/useAuth";
 
 export const useGetChannelById = (channelId: string) => {
   const { auth } = useAuth();
-
-  const { isFetching, isError, error, data } = useQuery({
+  const {
+    isFetching,
+    isError,
+    data: channelDetails,
+    error,
+  } = useQuery({
     queryFn: () => getChannelById({ channelId, token: auth?.token as string }),
     queryKey: [`get-channel-${channelId}`],
   });
@@ -14,7 +18,7 @@ export const useGetChannelById = (channelId: string) => {
   return {
     isFetching,
     isError,
+    channelDetails,
     error,
-    data,
   };
 };
